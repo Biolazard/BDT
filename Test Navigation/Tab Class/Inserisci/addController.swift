@@ -71,6 +71,8 @@ class addController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        debugPrint("hello")
+        debugPrint("hello")
         view.backgroundColor = UIColor(r: 220, g: 220, b: 220)
         view.addSubview(waveImage)
         view.addSubview(inserisciAnnuncio)

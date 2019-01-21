@@ -56,6 +56,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
     {
         super.viewDidLoad()
         debugPrint("hello")
+        debugPrint("hello")
         view.backgroundColor = .white
         navigationController?.navigationBar.topItem?.title = "Inserisci"
         navigationController?.navigationBar.tintColor = .white
