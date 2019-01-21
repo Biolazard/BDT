@@ -29,7 +29,6 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         txt.placeholder = "Titolo"
         txt.backgroundColor = .white
         txt.layer.borderWidth = 1
-        txt.
         txt.layer.borderColor = UIColor.black.cgColor
         txt.textAlignment = .left
         txt.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0)
