@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class FornisciRichiediController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
    
@@ -107,6 +108,38 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         return img
     }()
     
+    lazy var lblDurata: UILabel = {
+        var lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.font = .boldSystemFont(ofSize: 16)
+        lbl.textColor = .black
+        lbl.text = "Durata"
+        return lbl
+    }()
+    
+    lazy var txtDurata: UITextView = {
+        var txt = UITextView()
+        txt.translatesAutoresizingMaskIntoConstraints = false
+        txt.font = .systemFont(ofSize: 16)
+        txt.layer.borderWidth = 0.3
+        txt.layer.borderColor = UIColor.lightGray.cgColor
+        txt.isEditable = false
+        return txt
+    }()
+    
+    lazy var btnSend: UIButton = {
+        var btn = UIButton(type: .system)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setTitle("Invia", for: .normal)
+        btn.backgroundColor = UIColor(r: 22, g: 147, b: 162)
+        btn.setTitleColor(.white, for: .normal)
+        btn.layer.cornerRadius = 8
+        btn.titleLabel?.font = .boldSystemFont(ofSize: 28)
+        btn.contentHorizontalAlignment = .center
+        btn.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
+        return btn
+    }()
+    
     lazy var scroll: UIScrollView = {
         var scroll = UIScrollView()
         scroll.backgroundColor = UIColor(r: 245, g: 245, b: 245)
@@ -133,6 +166,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         view.backgroundColor = .white
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        
         view.addSubview(scroll)
         scroll.addSubview(lblTitle)
         scroll.addSubview(txtViewTitle)
@@ -142,8 +176,12 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         scroll.addSubview(txtCategoriaScelta)
         scroll.addSubview(lblLuogo)
         scroll.addSubview(txtLuogo)
+        scroll.addSubview(lblImage)
+        scroll.addSubview(addImage)
+        scroll.addSubview(lblDurata)
+        scroll.addSubview(txtDurata)
+        scroll.addSubview(btnSend)
         
-
         picker.delegate = self
         picker.dataSource = self
         picker.tag = 1
@@ -152,12 +190,11 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         pickerMinutes.dataSource = self
         pickerMinutes.tag = 2
         
-        
         let gestureAdd = UITapGestureRecognizer(target: self, action: #selector(handleAddPhoto))
         addImage.addGestureRecognizer(gestureAdd)
         
         txtCategoriaScelta.inputView = picker
-        
+        txtDurata.inputView = pickerMinutes
         
         configureConstraints()
         
@@ -167,28 +204,96 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
     }
     
     let categorie = ["prova1", "prova2", "prova3", "prova4", "prova5"]
+    let ore = [00, 01, 02, 03, 04]
+    let minuti = [00, 05, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
 
     func numberOfComponents(in pickerView: UIPickerView) -> Int
     {
-        return 1
+        switch pickerView.tag
+        {
+        case 1:
+            return 1
+        default:
+            return 2
+        }
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
     {
-        return categorie.count
+        switch pickerView.tag
+        {
+        case 1:
+            return categorie.count
+        default:
+            switch component
+            {
+            case 0:
+                return ore.count
+                
+            default:
+                return minuti.count
+            }
+            
+        }
+        
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
     {
-        return categorie[row]
+        switch pickerView.tag
+        {
+        case 1:
+            return categorie[row]
+        default:
+            switch component
+            {
+            case 0:
+                return "\(ore[row]) h"
+                
+            default:
+                return "\(minuti[row]) m"
+            }
+        }
+        
     }
+    
+    var oreText = 0
+    var minutiText = 0
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
-        self.txtCategoriaScelta.text = self.categorie[row]
-
-        // use the row to get the selected row from the picker view
-        // using the row extract the value from your datasource (array[row])
+        switch pickerView.tag
+        {
+        case 1:
+            self.txtCategoriaScelta.text = self.categorie[row]
+        default:
+            switch component
+            {
+            case 0:
+                oreText = ore[row]
+                if minutiText == 5 || minutiText == 0
+                {
+                    self.txtDurata.text = "0\(oreText):0\(minutiText)"
+                }
+                else
+                {
+                    self.txtDurata.text = "0\(oreText):\(minutiText)"
+                }
+                
+            default:
+                minutiText = minuti[row]
+                if minutiText == 5 || minutiText == 0
+                {
+                    self.txtDurata.text = "0\(oreText):0\(minutiText)"
+                }
+                else
+                {
+                    self.txtDurata.text = "0\(oreText):\(minutiText)"
+                }
+                
+            }
+        }
+        
     }
 
 
@@ -196,6 +301,85 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
     @objc func handleDismssKeyboard()
     {
         view.endEditing(true)
+    }
+    
+    let dataBase = Database.database().reference(fromURL: "https://banca-del-tempo-aa402.firebaseio.com")
+    
+    @objc func handleSend()
+    {
+        lblTitle.textColor = .black
+        lblDescription.textColor = .black
+        lblCategoria.textColor = .black
+        lblLuogo.textColor = .black
+        lblDurata.textColor = .black
+        
+        var errors = false
+        
+        if txtViewTitle.text.isEmpty == true
+        {
+            lblTitle.textColor = .red
+            errors = true
+        }
+        
+        if txtViewDescription.text.isEmpty == true
+        {
+            lblDescription.textColor = .red
+            errors = true
+        }
+        
+        if txtCategoriaScelta.text == "Scegli una categoria"
+        {
+            lblCategoria.textColor = .red
+            errors = true
+        }
+        
+        if txtLuogo.text.isEmpty == true
+        {
+            lblLuogo.textColor = .red
+            errors = true
+        }
+        
+        if txtDurata.text.isEmpty == true
+        {
+            lblDurata.textColor = .red
+            errors = true
+        }
+        
+        if errors == false
+        {
+            var post = 0
+            if let postCreated = UserDefaults.standard.value(forKey: "numeroPost")
+            {
+                
+                post = postCreated as! Int + 1
+            }
+            else
+            {
+                UserDefaults.standard.set(0, forKey: "numeroPost")
+                post = 0
+                
+            }
+            let postToAdd = self.dataBase.child("Post").child("\(post)")
+            let userID = Auth.auth().currentUser!.uid
+            
+            let newPost = ["utente boss": userID, "cambio ora": false, "proposte": nil, "termina da boss": false, "titolo": txtViewTitle.text, "descrizione": txtViewDescription.text, "ore": oreText, "minuti": minutiText, "luogo": txtLuogo.text, "categoria": txtCategoriaScelta.text, "richiestaofferta": navigationController?.title, "post assegnato": false, "feedback rilasciato": false, "termina utente help": false] as [String : Any?]
+            
+            post.updateChildValues(newPost, withCompletionBlock:
+                { (error, response) in
+                    if error != nil
+                    {
+                        debugPrint("errore")
+                    }
+                    else
+                    {
+                        debugPrint(response)
+                        
+                    }
+            })
+
+        }
+        
+        
     }
     
     @objc func handleAddPhoto()
@@ -249,6 +433,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
     {
         self.dismiss(animated: true, completion: nil)
     }
+    
     func configureConstraints()
     {
         scroll.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
@@ -284,8 +469,27 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         txtLuogo.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
         txtLuogo.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-//        pickerCategoria.topAnchor.constraint(equalTo: lblCategoria.bottomAnchor, constant: 4).isActive = true
-//        pickerCategoria.centerXAnchor.constraint(equalTo: scroll.centerXAnchor).isActive = true
+        lblImage.topAnchor.constraint(equalTo: txtLuogo.bottomAnchor, constant: 48).isActive = true
+        lblImage.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 16).isActive = true
+        
+        addImage.centerYAnchor.constraint(equalTo: lblImage.centerYAnchor).isActive = true
+        addImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        addImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        addImage.leftAnchor.constraint(equalTo: lblImage.rightAnchor, constant: 32).isActive = true
+        
+        lblDurata.topAnchor.constraint(equalTo: addImage.bottomAnchor, constant: 24).isActive = true
+        lblDurata.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 16).isActive = true
+        
+        txtDurata.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        txtDurata.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        txtDurata.centerYAnchor.constraint(equalTo: lblDurata.centerYAnchor).isActive = true
+        txtDurata.leftAnchor.constraint(equalTo: lblDurata.rightAnchor, constant: 32).isActive = true
+        txtDurata.centerXAnchor.constraint(equalTo: addImage.centerXAnchor).isActive = true
+        
+        btnSend.topAnchor.constraint(equalTo: txtDurata.bottomAnchor, constant: 48).isActive = true
+        btnSend.centerXAnchor.constraint(equalTo: scroll.centerXAnchor).isActive = true
+        btnSend.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -56).isActive = true
+        
     }
 
     
