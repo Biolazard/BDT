@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
 
 class FornisciRichiediController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
    
@@ -200,7 +201,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleDismssKeyboard))
         view.addGestureRecognizer(tap)
-
+        
     }
     
     let categorie = ["prova1", "prova2", "prova3", "prova4", "prova5"]
@@ -304,7 +305,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
     }
     
     let dataBase = Database.database().reference(fromURL: "https://banca-del-tempo-aa402.firebaseio.com")
-    
+    var titoloNav: String?
     @objc func handleSend()
     {
         lblTitle.textColor = .black
@@ -350,21 +351,20 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
             var post = 0
             if let postCreated = UserDefaults.standard.value(forKey: "numeroPost")
             {
-                
-                post = postCreated as! Int + 1
+
+                post = postCreated as! Int
             }
             else
             {
                 UserDefaults.standard.set(0, forKey: "numeroPost")
                 post = 0
-                
+
             }
             let postToAdd = self.dataBase.child("Post").child("\(post)")
             let userID = Auth.auth().currentUser!.uid
-            
-            let newPost = ["utente boss": userID, "cambio ora": false, "proposte": nil, "termina da boss": false, "titolo": txtViewTitle.text, "descrizione": txtViewDescription.text, "ore": oreText, "minuti": minutiText, "luogo": txtLuogo.text, "categoria": txtCategoriaScelta.text, "richiestaofferta": navigationController?.title, "post assegnato": false, "feedback rilasciato": false, "termina utente help": false] as [String : Any?]
-            
-            post.updateChildValues(newPost, withCompletionBlock:
+            let newPost = ["utente boss": userID, "cambio ora": false, "proposte": "", "termina da boss": false, "titolo": txtViewTitle.text, "descrizione": txtViewDescription.text, "ore": oreText, "minuti": minutiText, "luogo": txtLuogo.text, "categoria": txtCategoriaScelta.text, "richiestaofferta": self.titoloNav!, "post assegnato": false, "feedback rilasciato": false, "termina utente help": false] as [String : Any]
+
+            postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
                 { (error, response) in
                     if error != nil
                     {
@@ -373,10 +373,16 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
                     else
                     {
                         debugPrint(response)
-                        
+                        if let postCreated = UserDefaults.standard.value(forKey: "numeroPost")
+                        {
+                            
+                            UserDefaults.standard.set(postCreated as! Int + 1, forKey: "numeroPost")
+                        }
+                         self.navigationController?.popViewController(animated: true)
+
                     }
             })
-
+           
         }
         
         

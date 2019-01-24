@@ -92,6 +92,7 @@ class addController: UIViewController {
     {
         let controller = FornisciRichiediController()
         controller.title = "Fornisci"
+        controller.titoloNav = "fornisci"
         hidenNavigationBar()
         navigationController?.pushViewController(controller, animated: true)
         
@@ -101,6 +102,7 @@ class addController: UIViewController {
     {
         let controller = FornisciRichiediController()
         controller.title = "Richiedi"
+        controller.titoloNav = "richiedi"
         hidenNavigationBar()
         navigationController?.pushViewController(controller, animated: true)
     }
