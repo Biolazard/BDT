@@ -37,6 +37,7 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
     }()
     
     let cellID = "cellIDBDT"
+    
     lazy var myTable: UITableView = {
         var tbl = UITableView()
         tbl.translatesAutoresizingMaskIntoConstraints = false
@@ -47,6 +48,8 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         return tbl
     }()
     
+    
+    
     override var preferredStatusBarStyle: UIStatusBarStyle
     {
         return .lightContent
@@ -54,11 +57,14 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
     
     let dataBase = Database.database().reference(fromURL: "https://banca-del-tempo-aa402.firebaseio.com")
     var jsonDownloaded: [download] = []
+    let userID = Auth.auth().currentUser!.uid
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         view.addSubview(myTable)
+
+        
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.barTintColor = UIColor(r: 22, g: 147, b: 162)
         navigationItem.title = "Cerca"
@@ -74,13 +80,11 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         myTable.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor).isActive = true
     }
     
-    func downloadArray()
+    @objc func downloadArray()
     {
         dataBase.child("Post").observe(.value) { (snapshot) in
-            
             if let dictionary = snapshot.value as? [String : Any]
             {
-                
                 var fetchArray: [download] = []
                 for element in dictionary
                 {
@@ -90,6 +94,12 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
                 }
                 self.jsonDownloaded = fetchArray
                 self.myTable.reloadData()
+                
+            }
+            else
+            {
+                
+                debugPrint("errore")
             }
         }
     }
@@ -121,6 +131,13 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         else
         {
              cell.lblCosto.text = "0\(ore ?? 00):\(minuti ?? 00)"
+        }
+        
+        if post.idBoss == self.userID
+        {
+            debugPrint(post.idBoss, self.userID)
+            cell.backgroundColor?.withAlphaComponent(0.2)
+            cell.backgroundColor = .blue
         }
         
         return cell

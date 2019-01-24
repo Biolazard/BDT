@@ -204,7 +204,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         
     }
     
-    let categorie = ["prova1", "prova2", "prova3", "prova4", "prova5"]
+    let categorie = ["Lavoro manuale", "Consulenza professionale", "Consulenza informatica", "Compilazione questionario", "Volontariato"]
     let ore = [00, 01, 02, 03, 04]
     let minuti = [00, 05, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
 
@@ -495,6 +495,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         btnSend.topAnchor.constraint(equalTo: txtDurata.bottomAnchor, constant: 48).isActive = true
         btnSend.centerXAnchor.constraint(equalTo: scroll.centerXAnchor).isActive = true
         btnSend.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -56).isActive = true
+        btnSend.bottomAnchor.constraint(equalTo: scroll.bottomAnchor, constant: -16).isActive = true
         
     }
 

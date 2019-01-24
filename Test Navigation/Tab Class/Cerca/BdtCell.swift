@@ -14,6 +14,8 @@ class BdtCell: UITableViewCell {
     let lblTitolo = UILabel()
     let lblCosto = UILabel()
     let lblLuogo = UILabel()
+    var valoreUUID: String?
+    
     
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?)
