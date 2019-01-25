@@ -29,13 +29,6 @@ import FirebaseDatabase
 
 class searchController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    var btnLogin: UIButton = {
-        var btn = UIButton(frame: CGRect(x: 200, y: 200, width: 100, height: 100))
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitle("Go on", for: .normal)
-        return btn
-    }()
-    
     let cellID = "cellIDBDT"
     
     lazy var myTable: UITableView = {
@@ -47,8 +40,6 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         tbl.register(BdtCell.self, forCellReuseIdentifier: cellID)
         return tbl
     }()
-    
-    
     
     override var preferredStatusBarStyle: UIStatusBarStyle
     {
@@ -64,7 +55,7 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         super.viewDidLoad()
         view.addSubview(myTable)
 
-        
+        view.showBlurLoader()
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.barTintColor = UIColor(r: 22, g: 147, b: 162)
         navigationItem.title = "Cerca"
@@ -85,11 +76,14 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         dataBase.child("Post").observe(.value) { (snapshot) in
             if let dictionary = snapshot.value as? [String : Any]
             {
+                self.view.removeBluerLoader()
                 var fetchArray: [download] = []
                 for element in dictionary
                 {
+                    
                     let value = element.value as? [String: Any]
-                    let post = download(cambioOra: value?["cambio ora"] as? Bool, categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciato: value?["cambio ora"] as? Bool, luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: value?["posto assegnato"] as? Bool, terminaDaBoss: value?["termina da boss"] as? Bool, richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: value?["termina utente help"] as? Bool, titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String)
+                    
+                    let post = download(cambioOra: self.castToBool(value: value?["cambio ora"] as? String), categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciato: self.castToBool(value: value?["feedback rilasciato"] as? String), luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: self.castToBool(value: value?["post assegnato"] as? String), terminaDaBoss: self.castToBool(value: value?["termina da boss"] as? String), richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: self.castToBool(value: value?["termina utente help"] as? String), titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String)
                     fetchArray.append(post)
                 }
                 self.jsonDownloaded = fetchArray
@@ -98,9 +92,22 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
             }
             else
             {
-                
+                self.view.removeBluerLoader()
                 debugPrint("errore")
             }
+        }
+    }
+    
+    func castToBool (value: String?) -> Bool? {
+        let string = value?.lowercased()
+        
+        switch string {
+        case "false":
+            return false
+        case "true":
+            return true
+        default:
+            return nil
         }
     }
     
@@ -111,7 +118,10 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! BdtCell
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -119,26 +129,21 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! BdtCell
         
         let post = jsonDownloaded[indexPath.row]
-        cell.imageWork.image = UIImage(named: "weWantYou")
+        cell.imageWork.image = UIImage(named: post.idBoss!)
         cell.lblTitolo.text = post.titolo
         cell.lblLuogo.text = post.luogo
+        cell.lblRichiedeOffre.text = post.richiestaofferta?.uppercased()
         let ore = post.ore
         let minuti = post.minuti
         if minuti == 5 || minuti == 0
         {
-            cell.lblCosto.text = "0\(ore ?? 00):0\(minuti ?? 00)"
+            cell.lblCosto.text = "0\(ore ?? 00):0\(minuti ?? 00)h"
         }
         else
         {
-             cell.lblCosto.text = "0\(ore ?? 00):\(minuti ?? 00)"
+             cell.lblCosto.text = "0\(ore ?? 00):\(minuti ?? 00)h"
         }
-        
-        if post.idBoss == self.userID
-        {
-            debugPrint(post.idBoss, self.userID)
-            cell.backgroundColor?.withAlphaComponent(0.2)
-            cell.backgroundColor = .blue
-        }
+
         
         return cell
     }

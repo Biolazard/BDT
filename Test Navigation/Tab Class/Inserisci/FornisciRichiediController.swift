@@ -204,7 +204,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         
     }
     
-    let categorie = ["Lavoro manuale", "Consulenza professionale", "Consulenza informatica", "Compilazione questionario", "Volontariato"]
+    let categorie = ["Lezioni di vario genere", "Consulenza professionale", "Tecnologia e servizi digitali", "Commissioni", "Lavori domestci", "Sport, salute e benessere", "Organizzazione eventi", "Lavori manuali", "Altro"]
     let ore = [00, 01, 02, 03, 04]
     let minuti = [00, 05, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
 
@@ -362,7 +362,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
             }
             let postToAdd = self.dataBase.child("Post").child("\(post)")
             let userID = Auth.auth().currentUser!.uid
-            let newPost = ["utente boss": userID, "cambio ora": false, "proposte": "", "termina da boss": false, "titolo": txtViewTitle.text, "descrizione": txtViewDescription.text, "ore": oreText, "minuti": minutiText, "luogo": txtLuogo.text, "categoria": txtCategoriaScelta.text, "richiestaofferta": self.titoloNav!, "post assegnato": false, "feedback rilasciato": false, "termina utente help": false] as [String : Any]
+            let newPost = ["utente boss": userID, "cambio ora": "false", "proposte": "", "termina da boss": "false", "titolo": txtViewTitle.text, "descrizione": txtViewDescription.text, "ore": oreText, "minuti": minutiText, "luogo": txtLuogo.text, "categoria": txtCategoriaScelta.text, "richiestaofferta": self.titoloNav!, "post assegnato": "false", "feedback rilasciato": "false", "termina utente help": "false"] as [String : Any]
 
             postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
                 { (error, response) in
