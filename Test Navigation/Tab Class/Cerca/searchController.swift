@@ -21,6 +21,7 @@ struct download
     var terminaDaUtente: Bool?
     var titolo: String?
     var idBoss: String?
+    var idPost: Int?
 }
 
 import UIKit
@@ -83,7 +84,7 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
                     
                     let value = element.value as? [String: Any]
                     
-                    let post = download(cambioOra: self.castToBool(value: value?["cambio ora"] as? String), categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciato: self.castToBool(value: value?["feedback rilasciato"] as? String), luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: self.castToBool(value: value?["post assegnato"] as? String), terminaDaBoss: self.castToBool(value: value?["termina da boss"] as? String), richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: self.castToBool(value: value?["termina utente help"] as? String), titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String)
+                    let post = download(cambioOra: self.castToBool(value: value?["cambio ora"] as? String), categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciato: self.castToBool(value: value?["feedback rilasciato"] as? String), luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: self.castToBool(value: value?["post assegnato"] as? String), terminaDaBoss: self.castToBool(value: value?["termina da boss"] as? String), richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: self.castToBool(value: value?["termina utente help"] as? String), titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String, idPost: value?["idPost"] as? Int)
                     fetchArray.append(post)
                 }
                 self.jsonDownloaded = fetchArray
@@ -118,8 +119,23 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! BdtCell
+        let post = jsonDownloaded[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
+        let detailController = detailPostSearch()
+        detailController.title = post.titolo
+        detailController.lblDescrizione.text = post.descrizione
+        let ore = post.ore
+        let minuti = post.minuti
+        if minuti == 5 || minuti == 0
+        {
+            detailController.lblOreMinuti.text = "0\(ore ?? 00):0\(minuti ?? 00)h"
+        }
+        else
+        {
+            detailController.lblOreMinuti.text = "0\(ore ?? 00):\(minuti ?? 00)h"
+        }
+        detailController.lblTextLuogo.text = post.luogo
+        self.navigationController?.pushViewController(detailController, animated: true)
         
         
     }

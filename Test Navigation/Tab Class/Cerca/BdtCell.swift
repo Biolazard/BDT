@@ -34,6 +34,7 @@ class BdtCell: UITableViewCell {
         lblLuogo.translatesAutoresizingMaskIntoConstraints = false
         lblLuogo.numberOfLines = 1
         lblLuogo.font = .italicSystemFont(ofSize: 16)
+        lblLuogo.adjustsFontSizeToFitWidth = true
         
         lblRichiedeOffre.translatesAutoresizingMaskIntoConstraints = false
         lblRichiedeOffre.numberOfLines = 1

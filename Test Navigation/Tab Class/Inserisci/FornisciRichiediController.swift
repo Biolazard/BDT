@@ -362,7 +362,8 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
             }
             let postToAdd = self.dataBase.child("Post").child("\(post)")
             let userID = Auth.auth().currentUser!.uid
-            let newPost = ["utente boss": userID, "cambio ora": "false", "proposte": "", "termina da boss": "false", "titolo": txtViewTitle.text, "descrizione": txtViewDescription.text, "ore": oreText, "minuti": minutiText, "luogo": txtLuogo.text, "categoria": txtCategoriaScelta.text, "richiestaofferta": self.titoloNav!, "post assegnato": "false", "feedback rilasciato": "false", "termina utente help": "false"] as [String : Any]
+            let postCreated = UserDefaults.standard.value(forKey: "numeroPost")
+            let newPost = ["utente boss": userID, "cambio ora": "false", "proposte": "", "termina da boss": "false", "titolo": txtViewTitle.text, "descrizione": txtViewDescription.text, "ore": oreText, "minuti": minutiText, "luogo": txtLuogo.text, "categoria": txtCategoriaScelta.text, "richiestaofferta": self.titoloNav!, "post assegnato": "false", "feedback rilasciato": "false", "termina utente help": "false", "idPost": postCreated as! Int] as [String : Any]
 
             postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
                 { (error, response) in
