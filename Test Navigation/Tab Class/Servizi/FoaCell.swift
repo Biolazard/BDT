@@ -35,8 +35,6 @@ class FoaCell: UITableViewCell {
         lblProposteOInCorso.numberOfLines = 1
         lblProposteOInCorso.font = .boldSystemFont(ofSize: 16)
         
-        contentView.backgroundColor = .red
-        
         contentView.addSubview(imageProposte)
         contentView.addSubview(lblTitolo)
         contentView.addSubview(lblCosto)
@@ -64,7 +62,7 @@ class FoaCell: UITableViewCell {
         imageProposte.topAnchor.constraint(equalTo: lblCosto.bottomAnchor, constant: 8).isActive = true
         imageProposte.widthAnchor.constraint(equalToConstant: 40).isActive = true
         imageProposte.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
+
         lblProposteOInCorso.leftAnchor.constraint(equalTo: imageProposte.rightAnchor, constant: 8).isActive = true
         lblProposteOInCorso.centerYAnchor.constraint(equalTo: imageProposte.centerYAnchor).isActive = true
 
