@@ -35,7 +35,7 @@ class FoaCell: UITableViewCell {
         lblProposteOInCorso.numberOfLines = 1
         lblProposteOInCorso.font = .boldSystemFont(ofSize: 16)
         
-
+        contentView.backgroundColor = .red
         
         contentView.addSubview(imageProposte)
         contentView.addSubview(lblTitolo)

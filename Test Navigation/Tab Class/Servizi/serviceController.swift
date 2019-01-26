@@ -155,10 +155,7 @@ class serviceController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        //        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! BdtCell
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -182,6 +179,7 @@ class serviceController: UIViewController, UITableViewDelegate, UITableViewDataS
                 cell.lblProposteOInCorso.text = "Non ancora assegnato".uppercased()
                 cell.lblProposteOInCorso.textColor = .red
             }
+            
         case 1:
             let post = jsonOfferti[indexPath.row]
             cell.lblTitolo.text = post.titolo
@@ -196,6 +194,7 @@ class serviceController: UIViewController, UITableViewDelegate, UITableViewDataS
                 cell.lblProposteOInCorso.text = "Non ancora assegnato".uppercased()
                 cell.lblProposteOInCorso.textColor = .red
             }
+            
         default:
             let post = jsonAccettati[indexPath.row]
             cell.lblTitolo.text = post.titolo

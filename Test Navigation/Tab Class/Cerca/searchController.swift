@@ -124,6 +124,15 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         tableView.deselectRow(at: indexPath, animated: true)
         let detailController = detailPostSearch()
         detailController.title = "Post"
+        if post.postAssegnato == true
+        {
+            detailController.lblProposte.text = "Assegnato a"
+        }
+        if post.proposte != ""
+        {
+            detailController.btnInviaRichiesta.setTitle("Richiesta inviata", for: .normal)
+            detailController.btnInviaRichiesta.isEnabled = false
+        }
         detailController.lblDescrizione.text = post.descrizione
         let ore = post.ore
         let minuti = post.minuti

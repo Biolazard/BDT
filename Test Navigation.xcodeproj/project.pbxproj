@@ -108,6 +108,14 @@
 			path = "Test Navigation";
 			sourceTree = "<group>";
 		};
+		A495C96421FCD8F900DDC8CD /* Profili proposti */ = {
+			isa = PBXGroup;
+			children = (
+				A4F8B36521FCA963008F72F5 /* openedProfile.swift */,
+			);
+			path = "Profili proposti";
+			sourceTree = "<group>";
+		};
 		A49E9EE121D8075100E7844C /* Inserisci */ = {
 			isa = PBXGroup;
 			children = (
@@ -123,7 +131,7 @@
 				A4A40FDD219AFBEF0012A7F4 /* searchController.swift */,
 				A48D608A21D6EC9400C39DF7 /* BdtCell.swift */,
 				A4D48DC221FB7A130045D34D /* detailPostSearch.swift */,
-				A4F8B36521FCA963008F72F5 /* openedProfile.swift */,
+				A495C96421FCD8F900DDC8CD /* Profili proposti */,
 			);
 			path = Cerca;
 			sourceTree = "<group>";
@@ -233,6 +241,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Test Navigation/Pods-Test Navigation-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Cosmos/Cosmos.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
@@ -240,6 +249,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cosmos.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",

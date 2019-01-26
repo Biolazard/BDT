@@ -121,16 +121,25 @@ class detailPostSearch: UIViewController {
             {
             case "RtvEIHrdBXWfddMLletlSDbMqcc2":
                 imgProposta.image = UIImage(named: "RtvEIHrdBXWfddMLletlSDbMqcc2")
-                imgProposta.alpha = 1
+                if userID != "RtvEIHrdBXWfddMLletlSDbMqcc2"
+                {
+                    imgProposta.alpha = 1
+                }
+                
                 
             case "PtXGYG1Qx7gheDkehkiZmJAaOuy1":
                 imgProposta.image = UIImage(named: "PtXGYG1Qx7gheDkehkiZmJAaOuy1")
-                imgProposta.alpha = 1
+                if userID != "PtXGYG1Qx7gheDkehkiZmJAaOuy1"
+                {
+                    imgProposta.alpha = 1
+                }
                 
             default:
                 lblProposte.text = "Nessuna proposta".uppercased()
                 lblProposte.textColor = .red
             }
+            
+            
             
         }
     }
@@ -186,6 +195,12 @@ class detailPostSearch: UIViewController {
         let newProfile = openedProfile()
         newProfile.title = titoloNav
         newProfile.idProfile = self.proposte
+        newProfile.postInt = self.postInt
+        if lblProposte.text == "Assegnato a"
+        {
+            newProfile.btnAccetta.alpha = 0
+            newProfile.btnRifiuta.alpha = 0
+        }
         self.navigationController?.pushViewController(newProfile, animated: true)
     }
     
@@ -208,6 +223,7 @@ class detailPostSearch: UIViewController {
                 {
                     self.view.removeBluerLoader()
                     self.navigationController?.popViewController(animated: true)
+                    
                 }
         })
     }

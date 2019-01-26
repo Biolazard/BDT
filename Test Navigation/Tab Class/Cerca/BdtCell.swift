@@ -30,6 +30,7 @@ class BdtCell: UITableViewCell {
         
         lblCosto.translatesAutoresizingMaskIntoConstraints = false
         lblCosto.numberOfLines = 1
+        lblCosto.adjustsFontSizeToFitWidth = true
         
         lblLuogo.translatesAutoresizingMaskIntoConstraints = false
         lblLuogo.numberOfLines = 1
@@ -40,6 +41,8 @@ class BdtCell: UITableViewCell {
         lblRichiedeOffre.numberOfLines = 1
         lblRichiedeOffre.font = .boldSystemFont(ofSize: 16)
         lblRichiedeOffre.textColor = UIColor(r: 22, g: 147, b: 162)
+        lblRichiedeOffre.adjustsFontSizeToFitWidth = true
+        
         
         contentView.addSubview(imageWork)
         contentView.addSubview(lblTitolo)
