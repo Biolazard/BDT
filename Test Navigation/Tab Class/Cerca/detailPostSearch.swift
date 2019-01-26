@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
 
 class detailPostSearch: UIViewController {
 
@@ -83,11 +85,66 @@ class detailPostSearch: UIViewController {
         return btn
     }()
     
+    lazy var lblProposte: UILabel = {
+        var lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.font = .boldSystemFont(ofSize: 16)
+        lbl.textAlignment = .center
+        lbl.text = "Proposte"
+        lbl.alpha = 0
+        return lbl
+    }()
+    
+    lazy var imgProposta: UIImageView = {
+        var img = UIImageView()
+        img.translatesAutoresizingMaskIntoConstraints = false
+        img.contentMode = .scaleAspectFit
+        img.alpha = 0
+        img.isUserInteractionEnabled = true
+        return img
+    }()
+    
+    
+    
     override var preferredStatusBarStyle: UIStatusBarStyle
     {
         return .lightContent
     }
     
+    let userID = Auth.auth().currentUser!.uid
+    var postInt: Int? 
+    var proposte: String?
+    {
+        didSet
+        {
+            switch proposte
+            {
+            case "RtvEIHrdBXWfddMLletlSDbMqcc2":
+                imgProposta.image = UIImage(named: "RtvEIHrdBXWfddMLletlSDbMqcc2")
+                imgProposta.alpha = 1
+                
+            case "PtXGYG1Qx7gheDkehkiZmJAaOuy1":
+                imgProposta.image = UIImage(named: "PtXGYG1Qx7gheDkehkiZmJAaOuy1")
+                imgProposta.alpha = 1
+                
+            default:
+                lblProposte.text = "Nessuna proposta".uppercased()
+                lblProposte.textColor = .red
+            }
+            
+        }
+    }
+    var uidUserBoss: String?
+    {
+        didSet
+        {
+            if uidUserBoss == userID
+            {
+                btnInviaRichiesta.alpha = 0
+                lblProposte.alpha = 1
+            }
+        }
+    }
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -102,13 +159,59 @@ class detailPostSearch: UIViewController {
         view.addSubview(btnInviaRichiesta)
         view.addSubview(lblLuogo)
         view.addSubview(lblTextLuogo)
+        view.addSubview(lblProposte)
+        view.addSubview(imgProposta)
+        
+        let gestureAdd = UITapGestureRecognizer(target: self, action: #selector(openProfile))
+        imgProposta.addGestureRecognizer(gestureAdd)
+        
         configureConstraints()
     }
     
+    @objc func openProfile()
+    {
+        
+        var titoloNav = ""
+        switch self.proposte
+        {
+        case "RtvEIHrdBXWfddMLletlSDbMqcc2":
+            titoloNav = "Elon Musk"
+            
+        case "PtXGYG1Qx7gheDkehkiZmJAaOuy1":
+            titoloNav = "Steve Jovs"
+            
+        default:
+            titoloNav = "Elon Musk"
+        }
+        let newProfile = openedProfile()
+        newProfile.title = titoloNav
+        newProfile.idProfile = self.proposte
+        self.navigationController?.pushViewController(newProfile, animated: true)
+    }
+    
+    let dataBase = Database.database().reference(fromURL: "https://banca-del-tempo-aa402.firebaseio.com")
+    
     @objc func handleInviaRichiesta()
     {
-        debugPrint("hello")
+        self.view.showBlurLoader()
+        let postToAdd = self.dataBase.child("Post").child("\(self.postInt ?? 0)")
+        let newPost = ["proposte": self.userID] as [String : Any]
+        
+        postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+            { (error, response) in
+                if error != nil
+                {
+                    debugPrint("errore")
+                    self.view.removeBluerLoader()
+                }
+                else
+                {
+                    self.view.removeBluerLoader()
+                    self.navigationController?.popViewController(animated: true)
+                }
+        })
     }
+
     
     func configureConstraints()
     {
@@ -136,6 +239,15 @@ class detailPostSearch: UIViewController {
         btnInviaRichiesta.topAnchor.constraint(equalTo: lblTextLuogo.bottomAnchor, constant: 32).isActive = true
         btnInviaRichiesta.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         btnInviaRichiesta.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -56).isActive = true
+        
+        lblProposte.topAnchor.constraint(equalTo: lblTextLuogo.bottomAnchor, constant: 16).isActive = true
+        lblProposte.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        lblProposte.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        imgProposta.topAnchor.constraint(equalTo: lblProposte.bottomAnchor, constant: 8).isActive = true
+        imgProposta.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        imgProposta.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        imgProposta.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
     }
     

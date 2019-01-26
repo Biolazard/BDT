@@ -23,6 +23,7 @@
 		A4D48DC321FB7A130045D34D /* detailPostSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D48DC221FB7A130045D34D /* detailPostSearch.swift */; };
 		A4F706A621C7D23F0018DCE1 /* addController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F706A521C7D23F0018DCE1 /* addController.swift */; };
 		A4F706A921C7D3AA0018DCE1 /* extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F706A821C7D3AA0018DCE1 /* extension.swift */; };
+		A4F8B36621FCA963008F72F5 /* openedProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F8B36521FCA963008F72F5 /* openedProfile.swift */; };
 		BBA5E0234E0FE794FE29E355 /* Pods_Test_Navigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ED57840F49C26B0C3088BD1 /* Pods_Test_Navigation.framework */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +49,7 @@
 		A4D48DC221FB7A130045D34D /* detailPostSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = detailPostSearch.swift; sourceTree = "<group>"; };
 		A4F706A521C7D23F0018DCE1 /* addController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addController.swift; sourceTree = "<group>"; };
 		A4F706A821C7D3AA0018DCE1 /* extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extension.swift; sourceTree = "<group>"; };
+		A4F8B36521FCA963008F72F5 /* openedProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openedProfile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 				A4A40FDD219AFBEF0012A7F4 /* searchController.swift */,
 				A48D608A21D6EC9400C39DF7 /* BdtCell.swift */,
 				A4D48DC221FB7A130045D34D /* detailPostSearch.swift */,
+				A4F8B36521FCA963008F72F5 /* openedProfile.swift */,
 			);
 			path = Cerca;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4F8B36621FCA963008F72F5 /* openedProfile.swift in Sources */,
 				A4A40FDE219AFBEF0012A7F4 /* searchController.swift in Sources */,
 				A4A40FE2219EE8870012A7F4 /* TabBarController.swift in Sources */,
 				A48D608B21D6EC9400C39DF7 /* BdtCell.swift in Sources */,
