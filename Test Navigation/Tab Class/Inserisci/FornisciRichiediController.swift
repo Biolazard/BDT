@@ -363,7 +363,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
             let postToAdd = self.dataBase.child("Post").child("\(post)")
             let userID = Auth.auth().currentUser!.uid
             let postCreated = UserDefaults.standard.value(forKey: "numeroPost")
-            let newPost = ["utente boss": userID, "cambio ora": "false", "proposte": "", "termina da boss": "false", "titolo": txtViewTitle.text, "descrizione": txtViewDescription.text, "ore": oreText, "minuti": minutiText, "luogo": txtLuogo.text, "categoria": txtCategoriaScelta.text, "richiestaofferta": self.titoloNav!, "post assegnato": "false", "feedback rilasciato": "false", "termina utente help": "false", "idPost": postCreated as! Int] as [String : Any]
+            let newPost = ["utente boss": userID, "cambio ora": "false", "proposte": "", "termina da boss": "false", "titolo": txtViewTitle.text, "descrizione": txtViewDescription.text, "ore": oreText, "minuti": minutiText, "luogo": txtLuogo.text, "categoria": txtCategoriaScelta.text, "richiestaofferta": self.titoloNav!, "post assegnato": "false", "feedback rilasciato boss": "false", "termina utente help": "false", "idPost": postCreated as! Int, "feedback rilasciato helper": "false",] as [String : Any]
 
             postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
                 { (error, response) in

@@ -11,7 +11,7 @@ import UIKit
 class FoaCell: UITableViewCell {
     
     let imageProposte = UIImageView()
-    let lblTitolo = UILabel()
+    var lblTitolo = UILabel()
     let lblCosto = UILabel()
     let lblProposteOInCorso = UILabel()
     var nomeAssegnato: String?
@@ -52,8 +52,11 @@ class FoaCell: UITableViewCell {
     {
         
         
-        lblTitolo.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8).isActive = true
+//        lblTitolo.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8).isActive = true
         lblTitolo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+        lblTitolo.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        lblTitolo.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -8).isActive = true
+        lblTitolo.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         
         lblCosto.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8).isActive = true
         lblCosto.topAnchor.constraint(equalTo: lblTitolo.bottomAnchor, constant: 8).isActive = true
@@ -65,6 +68,8 @@ class FoaCell: UITableViewCell {
 
         lblProposteOInCorso.leftAnchor.constraint(equalTo: imageProposte.rightAnchor, constant: 8).isActive = true
         lblProposteOInCorso.centerYAnchor.constraint(equalTo: imageProposte.centerYAnchor).isActive = true
+        lblProposteOInCorso.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        lblProposteOInCorso.widthAnchor.constraint(equalToConstant: 300).isActive = true
 
     }
 }

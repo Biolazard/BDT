@@ -85,6 +85,20 @@ class detailPostSearch: UIViewController {
         return btn
     }()
     
+    lazy var btnterminaServizio: UIButton = {
+        var btn = UIButton(type: .system)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setTitle("Termina servizio", for: .normal)
+        btn.backgroundColor = .red
+        btn.setTitleColor(.white, for: .normal)
+        btn.layer.cornerRadius = 8
+        btn.alpha = 0
+        btn.titleLabel?.font = .boldSystemFont(ofSize: 28)
+        btn.contentHorizontalAlignment = .center
+        btn.addTarget(self, action: #selector(handleTerminaServizio), for: .touchUpInside)
+        return btn
+    }()
+    
     lazy var lblProposte: UILabel = {
         var lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
@@ -170,6 +184,7 @@ class detailPostSearch: UIViewController {
         view.addSubview(lblTextLuogo)
         view.addSubview(lblProposte)
         view.addSubview(imgProposta)
+        view.addSubview(btnterminaServizio)
         
         let gestureAdd = UITapGestureRecognizer(target: self, action: #selector(openProfile))
         imgProposta.addGestureRecognizer(gestureAdd)
@@ -187,7 +202,7 @@ class detailPostSearch: UIViewController {
             titoloNav = "Elon Musk"
             
         case "PtXGYG1Qx7gheDkehkiZmJAaOuy1":
-            titoloNav = "Steve Jovs"
+            titoloNav = "Steve Jobs"
             
         default:
             titoloNav = "Elon Musk"
@@ -208,24 +223,166 @@ class detailPostSearch: UIViewController {
     
     @objc func handleInviaRichiesta()
     {
-        self.view.showBlurLoader()
         let postToAdd = self.dataBase.child("Post").child("\(self.postInt ?? 0)")
-        let newPost = ["proposte": self.userID] as [String : Any]
-        
-        postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
-            { (error, response) in
-                if error != nil
-                {
-                    debugPrint("errore")
-                    self.view.removeBluerLoader()
-                }
-                else
-                {
-                    self.view.removeBluerLoader()
-                    self.navigationController?.popViewController(animated: true)
+        if self.btnterminaServizio.currentTitle == "Lascia feedback" || self.btnInviaRichiesta.currentTitle == "Lascia feedback"
+        {
+            handleTerminaServizio()
+        }
+        else if btnInviaRichiesta.currentTitle != "Termina servizio"
+        {
+            self.view.showBlurLoader()
+            let newPost = ["proposte": self.userID] as [String : Any]
+            
+            postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+                { (error, response) in
+                    if error != nil
+                    {
+                        self.view.removeBluerLoader()
+                    }
+                    else
+                    {
+                        self.view.removeBluerLoader()
+                        
+                        self.navigationController?.popViewController(animated: true)
+                        
+                    }
+            })
+        }
+        else
+        {
+            let alert = UIAlertController(title: "Feedback", message: "Lascia un feedback per l'attività svolta", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dopo", style: .default, handler: { action in
+                switch action.style{
+                case .default:
+                    self.handleTerminaServizio()
+                case .cancel:
+                    debugPrint("no")
+                case .destructive:
+                    debugPrint("no")
+                }}))
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action in
+                switch action.style{
+                case .default:
+                    if self.userID == self.uidUserBoss
+                    {
+                        self.view.showBlurLoader()
+                        let newPost = ["termina da boss": "true"] as [String : Any]
+                        
+                        postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+                            { (error, response) in
+                                if error != nil
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                                else
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                        })
+                    }
+                    else
+                    {
+                        self.view.showBlurLoader()
+                        let newPost = ["termina utente help": "true"] as [String : Any]
+                        
+                        postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+                            { (error, response) in
+                                if error != nil
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                                else
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                        })
+                    }
                     
-                }
-        })
+                    let feed = feedbackController()
+                    switch self.userID
+                    {
+                    case "RtvEIHrdBXWfddMLletlSDbMqcc2":
+                        feed.txtFeedback.text = "Ciao Steve, penso che tu sia stato "
+                        
+                    default:
+                        feed.txtFeedback.text = "Ciao Elon, penso che tu sia stato "
+                    }
+                    feed.postInt = self.postInt
+                    feed.idBoss = self.uidUserBoss
+                    self.navigationController?.pushViewController(feed, animated: true)
+                case .cancel:
+                    debugPrint("no")
+                case .destructive:
+                    debugPrint("no")
+                }}))
+            
+            self.present(alert, animated: true, completion: nil)
+            
+        }
+       
+    }
+    
+    @objc func handleTerminaServizio()
+    {
+        let postToAdd = self.dataBase.child("Post").child("\(self.postInt ?? 0)")
+        if self.btnterminaServizio.currentTitle == "Lascia feedback" || self.btnInviaRichiesta.currentTitle == "Lascia feedback"
+        {
+            let feed = feedbackController()
+            switch self.userID
+            {
+            case "RtvEIHrdBXWfddMLletlSDbMqcc2":
+                feed.txtFeedback.text = "Ciao Steve, penso che tu sia stato "
+                
+            default:
+                feed.txtFeedback.text = "Ciao Elon, penso che tu sia stato "
+            }
+            feed.postInt = self.postInt
+            feed.idBoss = self.uidUserBoss
+            self.navigationController?.pushViewController(feed, animated: true)
+        }
+        else
+        {
+            if self.userID == self.uidUserBoss
+            {
+                self.view.showBlurLoader()
+                let newPost = ["termina da boss": "true"] as [String : Any]
+                
+                postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+                    { (error, response) in
+                        if error != nil
+                        {
+                            self.view.removeBluerLoader()
+                        }
+                        else
+                        {
+                            self.view.removeBluerLoader()
+                            self.navigationController?.popViewController(animated: true)
+                            
+                        }
+                })
+            }
+            else
+            {
+                self.view.showBlurLoader()
+                let newPost = ["termina utente help": "true"] as [String : Any]
+                
+                postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+                    { (error, response) in
+                        if error != nil
+                        {
+                            self.view.removeBluerLoader()
+                        }
+                        else
+                        {
+                            self.view.removeBluerLoader()
+                            self.navigationController?.popViewController(animated: true)
+                            
+                        }
+                })
+            }
+        }
+        
+        
     }
 
     
@@ -264,6 +421,10 @@ class detailPostSearch: UIViewController {
         imgProposta.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         imgProposta.heightAnchor.constraint(equalToConstant: 100).isActive = true
         imgProposta.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        btnterminaServizio.topAnchor.constraint(equalTo: imgProposta.bottomAnchor, constant: 32).isActive = true
+        btnterminaServizio.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        btnterminaServizio.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -56).isActive = true
         
     }
     

@@ -11,7 +11,7 @@ struct download
     var cambioOra: Bool?
     var categoria: String?
     var descrizione: String?
-    var feedbackRilasciato: Bool?
+    var feedbackRilasciatoBoss: Bool?
     var luogo: String?
     var minuti: Int?
     var ore: Int?
@@ -23,6 +23,13 @@ struct download
     var idBoss: String?
     var idPost: Int?
     var proposte: String?
+    var feedbackRilasciatoHelper: Bool?
+}
+
+struct infoUsers
+{
+    var stars: Double?
+    var descrizione: String?
 }
 
 import UIKit
@@ -73,7 +80,7 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         myTable.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor).isActive = true
     }
     
-    @objc func downloadArray()
+    func downloadArray()
     {
         dataBase.child("Post").observe(.value) { (snapshot) in
             if let dictionary = snapshot.value as? [String : Any]
@@ -85,8 +92,12 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
                     
                     let value = element.value as? [String: Any]
                     
-                    let post = download(cambioOra: self.castToBool(value: value?["cambio ora"] as? String), categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciato: self.castToBool(value: value?["feedback rilasciato"] as? String), luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: self.castToBool(value: value?["post assegnato"] as? String), terminaDaBoss: self.castToBool(value: value?["termina da boss"] as? String), richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: self.castToBool(value: value?["termina utente help"] as? String), titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String, idPost: value?["idPost"] as? Int, proposte: value?["proposte"] as? String)
-                    fetchArray.append(post)
+                    let post = download(cambioOra: self.castToBool(value: value?["cambio ora"] as? String), categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciatoBoss: self.castToBool(value: value?["feedback rilasciato boss"] as? String), luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: self.castToBool(value: value?["post assegnato"] as? String), terminaDaBoss: self.castToBool(value: value?["termina da boss"] as? String), richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: self.castToBool(value: value?["termina utente help"] as? String), titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String, idPost: value?["idPost"] as? Int, proposte: value?["proposte"] as? String, feedbackRilasciatoHelper: self.castToBool(value: value?["feedback rilasciato helper"] as? String))
+                    if post.postAssegnato == false
+                    {
+                        fetchArray.append(post)
+                    }
+                    
                 }
                 self.jsonDownloaded = fetchArray
                 self.myTable.reloadData()
@@ -127,11 +138,17 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         if post.postAssegnato == true
         {
             detailController.lblProposte.text = "Assegnato a"
+            detailController.btnterminaServizio.alpha = 1
         }
         if post.proposte != ""
         {
             detailController.btnInviaRichiesta.setTitle("Richiesta inviata", for: .normal)
             detailController.btnInviaRichiesta.isEnabled = false
+        }
+        if post.postAssegnato == true
+        {
+            detailController.btnInviaRichiesta.setTitle("Termina servizio", for: .normal)
+            detailController.btnInviaRichiesta.isEnabled = true
         }
         detailController.lblDescrizione.text = post.descrizione
         let ore = post.ore

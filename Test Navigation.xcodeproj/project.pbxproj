@@ -15,6 +15,9 @@
 		A436000A219AD77F007AAF60 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A4360008219AD77F007AAF60 /* LaunchScreen.storyboard */; };
 		A4360012219AD7B8007AAF60 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4360011219AD7B8007AAF60 /* Navigation.swift */; };
 		A48D608B21D6EC9400C39DF7 /* BdtCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48D608A21D6EC9400C39DF7 /* BdtCell.swift */; };
+		A495C96621FD157000DDC8CD /* feedbackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A495C96521FD157000DDC8CD /* feedbackCell.swift */; };
+		A495C96821FDE2C200DDC8CD /* feedbackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A495C96721FDE2C200DDC8CD /* feedbackController.swift */; };
+		A495C96A21FE029400DDC8CD /* myProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A495C96921FE029400DDC8CD /* myProfileCell.swift */; };
 		A4A40FDE219AFBEF0012A7F4 /* searchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A40FDD219AFBEF0012A7F4 /* searchController.swift */; };
 		A4A40FE2219EE8870012A7F4 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A40FE1219EE8870012A7F4 /* TabBarController.swift */; };
 		A4A40FE4219EF1120012A7F4 /* profileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A40FE3219EF1120012A7F4 /* profileController.swift */; };
@@ -41,6 +44,9 @@
 		A436FFFC219AD77D007AAF60 /* Test Navigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Test Navigation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A436FFFF219AD77D007AAF60 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A48D608A21D6EC9400C39DF7 /* BdtCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BdtCell.swift; sourceTree = "<group>"; };
+		A495C96521FD157000DDC8CD /* feedbackCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = feedbackCell.swift; sourceTree = "<group>"; };
+		A495C96721FDE2C200DDC8CD /* feedbackController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = feedbackController.swift; sourceTree = "<group>"; };
+		A495C96921FE029400DDC8CD /* myProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myProfileCell.swift; sourceTree = "<group>"; };
 		A4A40FDD219AFBEF0012A7F4 /* searchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = searchController.swift; sourceTree = "<group>"; };
 		A4A40FE1219EE8870012A7F4 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		A4A40FE3219EF1120012A7F4 /* profileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = profileController.swift; sourceTree = "<group>"; };
@@ -112,8 +118,18 @@
 			isa = PBXGroup;
 			children = (
 				A4F8B36521FCA963008F72F5 /* openedProfile.swift */,
+				A495C96521FD157000DDC8CD /* feedbackCell.swift */,
 			);
 			path = "Profili proposti";
+			sourceTree = "<group>";
+		};
+		A495C96B21FE02C800DDC8CD /* Profilo */ = {
+			isa = PBXGroup;
+			children = (
+				A4A40FE3219EF1120012A7F4 /* profileController.swift */,
+				A495C96921FE029400DDC8CD /* myProfileCell.swift */,
+			);
+			path = Profilo;
 			sourceTree = "<group>";
 		};
 		A49E9EE121D8075100E7844C /* Inserisci */ = {
@@ -140,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				A4D48DBD21FB3A490045D34D /* serviceController.swift */,
+				A495C96721FDE2C200DDC8CD /* feedbackController.swift */,
 				A4D48DC021FB4ED90045D34D /* FoaCell.swift */,
 			);
 			path = Servizi;
@@ -151,7 +168,7 @@
 				A49E9EE221D8076200E7844C /* Cerca */,
 				A49E9EE121D8075100E7844C /* Inserisci */,
 				A4D48DBF21FB44740045D34D /* Servizi */,
-				A4A40FE3219EF1120012A7F4 /* profileController.swift */,
+				A495C96B21FE02C800DDC8CD /* Profilo */,
 			);
 			path = "Tab Class";
 			sourceTree = "<group>";
@@ -295,7 +312,10 @@
 				A42CB77821D78E16006E9A03 /* FornisciRichiediController.swift in Sources */,
 				A4A40FE4219EF1120012A7F4 /* profileController.swift in Sources */,
 				A4360002219AD77D007AAF60 /* loginController.swift in Sources */,
+				A495C96621FD157000DDC8CD /* feedbackCell.swift in Sources */,
 				A4D48DC321FB7A130045D34D /* detailPostSearch.swift in Sources */,
+				A495C96A21FE029400DDC8CD /* myProfileCell.swift in Sources */,
+				A495C96821FDE2C200DDC8CD /* feedbackController.swift in Sources */,
 				A4D48DBE21FB3A490045D34D /* serviceController.swift in Sources */,
 				A4D48DC121FB4ED90045D34D /* FoaCell.swift in Sources */,
 				A4360000219AD77D007AAF60 /* AppDelegate.swift in Sources */,
