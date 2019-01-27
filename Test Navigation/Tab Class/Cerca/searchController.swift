@@ -129,6 +129,8 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         return jsonDownloaded.count
     }
     
+    
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         let post = jsonDownloaded[indexPath.row]

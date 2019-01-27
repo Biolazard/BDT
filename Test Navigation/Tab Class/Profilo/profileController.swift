@@ -34,6 +34,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         cosmos.settings.updateOnTouch = false
         cosmos.settings.textColor = .white
         cosmos.settings.totalStars = 5
+        cosmos.rating = 0
         cosmos.settings.fillMode = .precise
         cosmos.settings.filledColor = .white
         cosmos.settings.filledBorderColor = .white
@@ -46,7 +47,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         let item = ["CRONOLOGIA", "FEEDBACK"]
         sc = UISegmentedControl(items: item)
         sc.tintColor = UIColor.white
-        sc.selectedSegmentIndex = 1
+        sc.selectedSegmentIndex = 0
         sc.layer.borderColor = UIColor(r: 22, g: 147, b: 162).cgColor
         sc.layer.borderWidth = 1
         sc.translatesAutoresizingMaskIntoConstraints = false
@@ -94,6 +95,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         downloadFeedback()
         downloadArray()
+        handleCF()
         configureConstraints()
     }
     
@@ -248,7 +250,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
         
        
-        
+        cell.selectionStyle = UITableViewCell.SelectionStyle.none
         return cell
     }
     
