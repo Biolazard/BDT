@@ -254,7 +254,7 @@ class detailPostSearch: UIViewController {
             alert.addAction(UIAlertAction(title: "Dopo", style: .default, handler: { action in
                 switch action.style{
                 case .default:
-                    self.handleTerminaServizio()
+                    self.navigationController?.popViewController(animated: true)
                 case .cancel:
                     debugPrint("no")
                 case .destructive:
@@ -346,7 +346,7 @@ class detailPostSearch: UIViewController {
             alert.addAction(UIAlertAction(title: "Dopo", style: .default, handler: { action in
                 switch action.style{
                 case .default:
-                    self.handleTerminaServizio()
+                    self.navigationController?.popViewController(animated: true)
                 case .cancel:
                     debugPrint("no")
                 case .destructive:

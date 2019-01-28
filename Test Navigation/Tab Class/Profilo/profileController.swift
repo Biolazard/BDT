@@ -96,6 +96,9 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         return img
     }()
     
+    var oredisp = 20
+    var mindisp = 55
+    
     lazy var lblTimeDisp: UILabel = {
         var lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
@@ -103,7 +106,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         lbl.font = .systemFont(ofSize: 14)
         lbl.textAlignment = .center
         lbl.layer.cornerRadius = 8
-        lbl.text = "15:30h"
+        lbl.text = "\(oredisp):\(mindisp)h"
         return lbl
     }()
     
@@ -367,6 +370,10 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
                     self.minutiTot = self.minutiTot + post.minuti!
                     self.oreTot = self.oreTot + post.ore!
                     
+                    self.oredisp = self.oredisp - post.ore!
+                    self.mindisp = self.mindisp - post.minuti!
+                    
+                    self.lblTimeDisp.text = "\(self.oredisp ):\(self.mindisp)h"
                     self.lblTimeCong.text = "\(self.oreTot ):\(self.minutiTot)h"
                     self.array.append(post.idPost!)
                 }

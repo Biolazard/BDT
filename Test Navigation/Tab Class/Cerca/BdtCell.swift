@@ -74,6 +74,7 @@ class BdtCell: UITableViewCell {
         lblLuogo.leftAnchor.constraint(equalTo: imageWork.rightAnchor, constant: 8).isActive = true
         lblLuogo.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8).isActive = true
         lblLuogo.topAnchor.constraint(equalTo: lblCosto.bottomAnchor, constant: 8).isActive = true
+        lblLuogo.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         lblRichiedeOffre.leftAnchor.constraint(equalTo: lblCosto.rightAnchor, constant: 64).isActive = true
         lblRichiedeOffre.centerYAnchor.constraint(equalTo: lblCosto.centerYAnchor).isActive = true
