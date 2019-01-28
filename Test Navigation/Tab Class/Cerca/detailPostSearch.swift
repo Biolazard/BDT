@@ -342,44 +342,73 @@ class detailPostSearch: UIViewController {
         }
         else
         {
-            if self.userID == self.uidUserBoss
-            {
-                self.view.showBlurLoader()
-                let newPost = ["termina da boss": "true"] as [String : Any]
-                
-                postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
-                    { (error, response) in
-                        if error != nil
-                        {
-                            self.view.removeBluerLoader()
-                        }
-                        else
-                        {
-                            self.view.removeBluerLoader()
-                            self.navigationController?.popViewController(animated: true)
-                            
-                        }
-                })
-            }
-            else
-            {
-                self.view.showBlurLoader()
-                let newPost = ["termina utente help": "true"] as [String : Any]
-                
-                postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
-                    { (error, response) in
-                        if error != nil
-                        {
-                            self.view.removeBluerLoader()
-                        }
-                        else
-                        {
-                            self.view.removeBluerLoader()
-                            self.navigationController?.popViewController(animated: true)
-                            
-                        }
-                })
-            }
+            let alert = UIAlertController(title: "Feedback", message: "Lascia un feedback per l'attività svolta", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dopo", style: .default, handler: { action in
+                switch action.style{
+                case .default:
+                    self.handleTerminaServizio()
+                case .cancel:
+                    debugPrint("no")
+                case .destructive:
+                    debugPrint("no")
+                }}))
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action in
+                switch action.style{
+                case .default:
+                    if self.userID == self.uidUserBoss
+                    {
+                        self.view.showBlurLoader()
+                        let newPost = ["termina da boss": "true"] as [String : Any]
+                        
+                        postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+                            { (error, response) in
+                                if error != nil
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                                else
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                        })
+                    }
+                    else
+                    {
+                        self.view.showBlurLoader()
+                        let newPost = ["termina utente help": "true"] as [String : Any]
+                        
+                        postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+                            { (error, response) in
+                                if error != nil
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                                else
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                        })
+                    }
+                    
+                    let feed = feedbackController()
+                    switch self.userID
+                    {
+                    case "RtvEIHrdBXWfddMLletlSDbMqcc2":
+                        feed.txtFeedback.text = "Ciao Steve, penso che tu sia stato "
+                        
+                    default:
+                        feed.txtFeedback.text = "Ciao Elon, penso che tu sia stato "
+                    }
+                    feed.postInt = self.postInt
+                    feed.idBoss = self.uidUserBoss
+                    self.navigationController?.pushViewController(feed, animated: true)
+                case .cancel:
+                    debugPrint("no")
+                case .destructive:
+                    debugPrint("no")
+                }}))
+            
+            self.present(alert, animated: true, completion: nil)
         }
         
         

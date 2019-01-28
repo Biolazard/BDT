@@ -47,7 +47,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         let item = ["CRONOLOGIA", "FEEDBACK"]
         sc = UISegmentedControl(items: item)
         sc.tintColor = UIColor.white
-        sc.selectedSegmentIndex = 0
+        sc.selectedSegmentIndex = 1
         sc.layer.borderColor = UIColor(r: 22, g: 147, b: 162).cgColor
         sc.layer.borderWidth = 1
         sc.translatesAutoresizingMaskIntoConstraints = false
@@ -71,6 +71,61 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         return tbl
     }()
     
+    lazy var nameProfile: UILabel = {
+        var lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.font = .boldSystemFont(ofSize: 20)
+        lbl.textColor = .white
+        if self.userID == "PtXGYG1Qx7gheDkehkiZmJAaOuy1"
+        {
+            lbl.text = "Steve Jobs"
+        }
+        else
+        {
+            lbl.text = "Elon Musk"
+        }
+        return lbl
+    }()
+    
+    lazy var tempoDisponbile: UIImageView = {
+        var img = UIImageView()
+        img.translatesAutoresizingMaskIntoConstraints = false
+        img.contentMode = .scaleAspectFit
+        img.image = UIImage(named: "tempo_disponibile")
+        img.isUserInteractionEnabled = true
+        return img
+    }()
+    
+    lazy var lblTimeDisp: UILabel = {
+        var lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.textColor = .white
+        lbl.font = .systemFont(ofSize: 14)
+        lbl.textAlignment = .center
+        lbl.layer.cornerRadius = 8
+        lbl.text = "15:30h"
+        return lbl
+    }()
+    
+    lazy var lblTimeCong: UILabel = {
+        var lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.textColor = .white
+        lbl.font = .systemFont(ofSize: 14)
+        lbl.textAlignment = .center
+        lbl.layer.cornerRadius = 8
+        lbl.backgroundColor = UIColor(r: 25, g: 130, b: 243)
+        return lbl
+    }()
+    
+    lazy var tempoCongelato: UIImageView = {
+        var img = UIImageView()
+        img.translatesAutoresizingMaskIntoConstraints = false
+        img.contentMode = .scaleAspectFit
+        img.image = UIImage(named: "tempo_congelato")
+        img.isUserInteractionEnabled = true
+        return img
+    }()
     let userID = Auth.auth().currentUser!.uid
     
     override var preferredStatusBarStyle: UIStatusBarStyle
@@ -88,6 +143,12 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         lblColor.addSubview(imgProfile)
         lblColor.addSubview(cosmosView)
+        lblColor.addSubview(nameProfile)
+        
+        view.addSubview(tempoDisponbile)
+        view.addSubview(tempoCongelato)
+        view.addSubview(lblTimeDisp)
+        view.addSubview(lblTimeCong)
         view.addSubview(segmentControl)
         view.addSubview(myTable)
         
@@ -97,7 +158,53 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         downloadArray()
         handleCF()
         configureConstraints()
+        segmentControl.selectedSegmentIndex = 0
+        
+        let tempoDisponibilee: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTempo))
+        tempoDisponbile.addGestureRecognizer(tempoDisponibilee)
+        
+        let tempoCongelatoo: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleCongelato))
+        tempoCongelato.addGestureRecognizer(tempoCongelatoo)
+        
     }
+            
+    @objc func handleTempo()
+    {
+        debugPrint("hello")
+        let alert = UIAlertController(title: "Tempo disponibile", message: "É il tempo che hai a disposizione da\n utilizzare per richiedere o\n fornire servizi", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            switch action.style
+            {
+            case .default:
+                debugPrint("ok")
+            case .cancel:
+                debugPrint("no")
+            case .destructive:
+                debugPrint("ok")
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    @objc func handleCongelato()
+    {
+        debugPrint("hello")
+        let alert = UIAlertController(title: "Tempo congelato", message: "É il tempo, necessario per il\n pagamento, che viene congelato\n fino al termine del servizio ", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            switch action.style
+            {
+            case .default:
+                debugPrint("ok")
+            case .cancel:
+                debugPrint("no")
+            case .destructive:
+                debugPrint("ok")
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
     
     let dataBase = Database.database().reference(fromURL: "https://banca-del-tempo-aa402.firebaseio.com")
     var postInt: Int?
@@ -205,6 +312,10 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
     }
     
+    var minutiTot = 0
+    var oreTot = 0
+    var array: [Int] = []
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! myProfileCell
         
@@ -214,6 +325,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         {
         case 0:
             let post = jsonDownload[indexPath.row]
+            
             cell.start.alpha = 0
             cell.imageFeedback.image = UIImage(named: post.idBoss!)
             cell.descrizione.text = post.descrizione
@@ -222,14 +334,45 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
             cell.titolo.text = post.titolo
             let ore = post.ore
             let minuti = post.minuti
-            if minuti == 5 || minuti == 0
+            if self.userID == post.idBoss
             {
-                cell.oreMinuti.text = "0\(ore ?? 00):0\(minuti ?? 00)h"
+                cell.oreMinuti.textColor = .red
+                if minuti == 5 || minuti == 0
+                {
+                    cell.oreMinuti.text = "- 0\(ore ?? 00):0\(minuti ?? 00)h"
+                }
+                else
+                {
+                    cell.oreMinuti.text = "- 0\(ore ?? 00):\(minuti ?? 00)h"
+                }
             }
-            else
+            else if self.userID != post.idBoss
             {
-                cell.oreMinuti.text = "0\(ore ?? 00):\(minuti ?? 00)h"
+                cell.oreMinuti.textColor = .green
+                if minuti == 5 || minuti == 0
+                {
+                    cell.oreMinuti.text = "+ 0\(ore ?? 00):0\(minuti ?? 00)h"
+                }
+                else
+                {
+                    cell.oreMinuti.text = "+ 0\(ore ?? 00):\(minuti ?? 00)h"
+                }
             }
+            
+            if self.userID == post.idBoss && post.terminaDaBoss == false
+            {
+                
+                if !self.array.contains(post.idPost!)
+                {
+                    self.minutiTot = self.minutiTot + post.minuti!
+                    self.oreTot = self.oreTot + post.ore!
+                    
+                    self.lblTimeCong.text = "\(self.oreTot ):\(self.minutiTot)h"
+                    self.array.append(post.idPost!)
+                }
+                
+            }
+            
             
         default:
             let post = jsonFeedback[indexPath.row]
@@ -266,8 +409,29 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         imgProfile.heightAnchor.constraint(equalToConstant: 100).isActive = true
         imgProfile.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
+        nameProfile.leftAnchor.constraint(equalTo: imgProfile.rightAnchor, constant: 16).isActive = true
+        nameProfile.centerYAnchor.constraint(equalTo: imgProfile.centerYAnchor, constant: -40).isActive = true
+        
         cosmosView.leftAnchor.constraint(equalTo: imgProfile.rightAnchor, constant: 16).isActive = true
-        cosmosView.centerYAnchor.constraint(equalTo: imgProfile.centerYAnchor, constant: -32).isActive = true
+        cosmosView.centerYAnchor.constraint(equalTo: imgProfile.centerYAnchor, constant: -8).isActive = true
+        
+        tempoDisponbile.leftAnchor.constraint(equalTo: imgProfile.rightAnchor, constant: 16).isActive = true
+        tempoDisponbile.topAnchor.constraint(equalTo: cosmosView.bottomAnchor, constant: 16).isActive = true
+        tempoDisponbile.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        tempoDisponbile.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        
+        lblTimeDisp.centerYAnchor.constraint(equalTo: tempoDisponbile.centerYAnchor).isActive = true
+        lblTimeDisp.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        lblTimeDisp.leftAnchor.constraint(equalTo: tempoDisponbile.rightAnchor, constant: 8).isActive = true
+        
+        tempoCongelato.leftAnchor.constraint(equalTo: imgProfile.rightAnchor, constant: 16).isActive = true
+        tempoCongelato.topAnchor.constraint(equalTo: tempoDisponbile.bottomAnchor, constant: 8).isActive = true
+        tempoCongelato.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        tempoCongelato.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        
+        lblTimeCong.centerYAnchor.constraint(equalTo: tempoCongelato.centerYAnchor).isActive = true
+        lblTimeCong.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        lblTimeCong.leftAnchor.constraint(equalTo: tempoDisponbile.rightAnchor, constant: 8).isActive = true
         
         segmentControl.topAnchor.constraint(equalTo: lblColor.bottomAnchor).isActive = true
         segmentControl.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true

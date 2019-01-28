@@ -76,7 +76,7 @@ class myProfileCell: UITableViewCell {
         descrizione.topAnchor.constraint(equalTo: start.bottomAnchor, constant: 8).isActive = true
         descrizione.leftAnchor.constraint(equalTo: imageFeedback.rightAnchor, constant: 16).isActive = true
         descrizione.widthAnchor.constraint(equalToConstant: 250).isActive = true
-//        descrizione.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        descrizione.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
         
     }
