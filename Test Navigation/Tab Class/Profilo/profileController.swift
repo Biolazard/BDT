@@ -374,7 +374,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
             {
                 if post.richiestaofferta == "fornisce"
                 {
-                    cell.oreMinuti.textColor = .green
+                    cell.oreMinuti.textColor = .red
                     if minuti == 5 || minuti == 0
                     {
                         
@@ -387,7 +387,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
                 }
                 else
                 {
-                    cell.oreMinuti.textColor = .red
+                    cell.oreMinuti.textColor = .green 
                     if minuti == 5 || minuti == 0
                     {
                         cell.oreMinuti.text = "+ 0\(ore ?? 00):0\(minuti ?? 00)h"
