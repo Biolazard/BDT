@@ -254,6 +254,40 @@ class detailPostSearch: UIViewController {
             alert.addAction(UIAlertAction(title: "Dopo", style: .default, handler: { action in
                 switch action.style{
                 case .default:
+                    if self.userID == self.uidUserBoss
+                    {
+                        self.view.showBlurLoader()
+                        let newPost = ["termina da boss": "true"] as [String : Any]
+                        
+                        postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+                            { (error, response) in
+                                if error != nil
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                                else
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                        })
+                    }
+                    else
+                    {
+                        self.view.showBlurLoader()
+                        let newPost = ["termina utente help": "true"] as [String : Any]
+                        
+                        postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+                            { (error, response) in
+                                if error != nil
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                                else
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                        })
+                    }
                     self.navigationController?.popViewController(animated: true)
                 case .cancel:
                     debugPrint("no")
@@ -346,6 +380,40 @@ class detailPostSearch: UIViewController {
             alert.addAction(UIAlertAction(title: "Dopo", style: .default, handler: { action in
                 switch action.style{
                 case .default:
+                    if self.userID == self.uidUserBoss
+                    {
+                        self.view.showBlurLoader()
+                        let newPost = ["termina da boss": "true"] as [String : Any]
+                        
+                        postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+                            { (error, response) in
+                                if error != nil
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                                else
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                        })
+                    }
+                    else
+                    {
+                        self.view.showBlurLoader()
+                        let newPost = ["termina utente help": "true"] as [String : Any]
+                        
+                        postToAdd.updateChildValues(newPost as [AnyHashable : Any], withCompletionBlock:
+                            { (error, response) in
+                                if error != nil
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                                else
+                                {
+                                    self.view.removeBluerLoader()
+                                }
+                        })
+                    }
                     self.navigationController?.popViewController(animated: true)
                 case .cancel:
                     debugPrint("no")
