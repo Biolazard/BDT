@@ -114,7 +114,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.font = .boldSystemFont(ofSize: 16)
         lbl.textColor = .black
-        lbl.text = "Durata"
+        lbl.text = "Compenso"
         return lbl
     }()
     

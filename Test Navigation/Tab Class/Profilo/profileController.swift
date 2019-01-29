@@ -176,7 +176,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
     @objc func handleTempo()
     {
         debugPrint("hello")
-        let alert = UIAlertController(title: "Tempo disponibile", message: "É il tempo che hai a disposizione da\n utilizzare per richiedere o\n fornire servizi", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Tempo disponibile", message: "É il tempo che hai a disposizione da\n utilizzare per richiedere servizi", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
             switch action.style
             {
