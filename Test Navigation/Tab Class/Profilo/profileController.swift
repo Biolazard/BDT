@@ -141,6 +141,8 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         super.viewDidLoad()
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.barTintColor = UIColor(r: 22, g: 147, b: 162)
+        navigationController?.navigationBar.tintColor = .white
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         navigationItem.title = "Profilo"
         view.addSubview(lblColor)
         
@@ -316,6 +318,16 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
     }
     
+    @objc func handleLogout()
+    {
+        do
+        {
+            try Auth.auth().signOut()
+            present(loginController(), animated: false, completion: nil)
+        } catch { debugPrint(error.localizedDescription)}
+        
+    }
+    
     var minutiTot = 0
     var oreTot = 0
     var array: [Int] = []
@@ -387,7 +399,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
                 }
                 else
                 {
-                    cell.oreMinuti.textColor = .green 
+                    cell.oreMinuti.textColor = .green
                     if minuti == 5 || minuti == 0
                     {
                         cell.oreMinuti.text = "+ 0\(ore ?? 00):0\(minuti ?? 00)h"
