@@ -230,9 +230,10 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
                     let value = element.value as? [String: Any]
                     
                     let post = download(cambioOra: self.castToBool(value: value?["cambio ora"] as? String), categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciatoBoss: self.castToBool(value: value?["feedback rilasciato boss"] as? String), luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: self.castToBool(value: value?["post assegnato"] as? String), terminaDaBoss: self.castToBool(value: value?["termina da boss"] as? String), richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: self.castToBool(value: value?["termina utente help"] as? String), titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String, idPost: value?["idPost"] as? Int, proposte: value?["proposte"] as? String, feedbackRilasciatoHelper: self.castToBool(value: value?["feedback rilasciato helper"] as? String))
-                    
-                    fetchArray.append(post)
- 
+                    if post.terminaDaBoss == true && post.terminaDaUtente == true
+                    {
+                        fetchArray.append(post)
+                    }
                 }
                 self.jsonDownload = fetchArray
                 self.myTable.reloadData()
@@ -339,26 +340,63 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
             let minuti = post.minuti
             if self.userID == post.idBoss
             {
-                cell.oreMinuti.textColor = .red
-                if minuti == 5 || minuti == 0
+                
+                if post.richiestaofferta == "fornisce"
                 {
-                    cell.oreMinuti.text = "- 0\(ore ?? 00):0\(minuti ?? 00)h"
+                    cell.oreMinuti.textColor = .green
+                    if minuti == 5 || minuti == 0
+                    {
+                        
+                        cell.oreMinuti.text = "+ 0\(ore ?? 00):0\(minuti ?? 00)h"
+                    }
+                    else
+                    {
+                        cell.oreMinuti.text = "+ 0\(ore ?? 00):\(minuti ?? 00)h"
+                    }
                 }
                 else
                 {
-                    cell.oreMinuti.text = "- 0\(ore ?? 00):\(minuti ?? 00)h"
+                    cell.oreMinuti.textColor = .red
+                    if minuti == 5 || minuti == 0
+                    {
+                        cell.oreMinuti.text = "- 0\(ore ?? 00):0\(minuti ?? 00)h"
+                        cell.oreMinuti.textColor = .red
+                    }
+                    else
+                    {
+                        cell.oreMinuti.text = "- 0\(ore ?? 00):\(minuti ?? 00)h"
+                        
+                    }
                 }
+               
             }
             else if self.userID != post.idBoss
             {
-                cell.oreMinuti.textColor = .green
-                if minuti == 5 || minuti == 0
+                if post.richiestaofferta == "fornisce"
                 {
-                    cell.oreMinuti.text = "+ 0\(ore ?? 00):0\(minuti ?? 00)h"
+                    cell.oreMinuti.textColor = .green
+                    if minuti == 5 || minuti == 0
+                    {
+                        
+                        cell.oreMinuti.text = "- 0\(ore ?? 00):0\(minuti ?? 00)h"
+                    }
+                    else
+                    {
+                        cell.oreMinuti.text = "- 0\(ore ?? 00):\(minuti ?? 00)h"
+                    }
                 }
                 else
                 {
-                    cell.oreMinuti.text = "+ 0\(ore ?? 00):\(minuti ?? 00)h"
+                    cell.oreMinuti.textColor = .red
+                    if minuti == 5 || minuti == 0
+                    {
+                        cell.oreMinuti.text = "+ 0\(ore ?? 00):0\(minuti ?? 00)h"
+                    }
+                    else
+                    {
+                        cell.oreMinuti.text = "+ 0\(ore ?? 00):\(minuti ?? 00)h"
+                        
+                    }
                 }
             }
             
