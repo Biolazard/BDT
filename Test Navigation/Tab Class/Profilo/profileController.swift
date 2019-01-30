@@ -136,6 +136,19 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         return .lightContent
     }
     
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(true)
+
+        lblTimeCong.text = nil
+        self.oredisp = 20
+        self.mindisp = 55
+        self.minutiTot = 0
+        self.oreTot = 0
+        self.array.removeAll()
+        downloadArray()
+        
+    }
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -232,6 +245,34 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
                     let value = element.value as? [String: Any]
                     
                     let post = download(cambioOra: self.castToBool(value: value?["cambio ora"] as? String), categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciatoBoss: self.castToBool(value: value?["feedback rilasciato boss"] as? String), luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: self.castToBool(value: value?["post assegnato"] as? String), terminaDaBoss: self.castToBool(value: value?["termina da boss"] as? String), richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: self.castToBool(value: value?["termina utente help"] as? String), titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String, idPost: value?["idPost"] as? Int, proposte: value?["proposte"] as? String, feedbackRilasciatoHelper: self.castToBool(value: value?["feedback rilasciato helper"] as? String))
+                    
+                    if post.terminaDaBoss == false && post.idBoss == self.userID && post.richiestaofferta == "richiede"
+                    {
+                        if !self.array.contains(post.idPost!)
+                        {
+                            self.minutiTot = self.minutiTot + post.minuti!
+                            self.oreTot = self.oreTot + post.ore!
+                            
+                            self.oredisp = self.oredisp - post.ore!
+                            self.mindisp = self.mindisp - post.minuti!
+                            
+                            if post.minuti! == 5 || post.minuti! == 0
+                            {
+                                
+                                self.lblTimeCong.text = "0\(self.oreTot ):0\(self.minutiTot)h"
+                            }
+                            else
+                            {
+                                self.lblTimeCong.text = "0\(self.oreTot ):\(self.minutiTot)h"
+                            }
+                            self.lblTimeDisp.text = "\(self.oredisp ):\(self.mindisp)h"
+//                            self.lblTimeCong.text = "\(self.oreTot ):\(self.minutiTot)h"
+                            self.array.append(post.idPost!)
+                        }
+                        
+                        
+                    }
+                    
                     if post.terminaDaBoss == true && post.terminaDaUtente == true
                     {
                         fetchArray.append(post)
@@ -411,25 +452,6 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
                     }
                 }
             }
-            
-            if self.userID == post.idBoss && post.terminaDaBoss == false
-            {
-                
-                if !self.array.contains(post.idPost!)
-                {
-                    self.minutiTot = self.minutiTot + post.minuti!
-                    self.oreTot = self.oreTot + post.ore!
-                    
-                    self.oredisp = self.oredisp - post.ore!
-                    self.mindisp = self.mindisp - post.minuti!
-                    
-                    self.lblTimeDisp.text = "\(self.oredisp ):\(self.mindisp)h"
-                    self.lblTimeCong.text = "\(self.oreTot ):\(self.minutiTot)h"
-                    self.array.append(post.idPost!)
-                }
-                
-            }
-            
             
         default:
             let post = jsonFeedback[indexPath.row]
