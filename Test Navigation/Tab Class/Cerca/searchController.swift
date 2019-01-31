@@ -67,10 +67,20 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         view.showBlurLoader()
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.barTintColor = UIColor(r: 22, g: 147, b: 162)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddService))
+        navigationItem.rightBarButtonItem?.tintColor = .white
         navigationItem.title = "Cerca"
         configureConstraints()
         
         downloadArray()
+    }
+    
+    @objc func handleAddService()
+    {
+        let controller = FornisciRichiediController()
+        controller.title = "Fornisci"
+        controller.titoloNav = "fornisce"
+        self.present(controller, animated: true, completion: nil)
     }
 
     func configureConstraints()

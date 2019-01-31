@@ -141,6 +141,19 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         return btn
     }()
     
+    lazy var btnUndo: UIButton = {
+        var btn = UIButton(type: .system)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setTitle("Annulla", for: .normal)
+        btn.backgroundColor = .red
+        btn.setTitleColor(.white, for: .normal)
+        btn.layer.cornerRadius = 8
+        btn.titleLabel?.font = .boldSystemFont(ofSize: 28)
+        btn.contentHorizontalAlignment = .center
+        btn.addTarget(self, action: #selector(handleUndo), for: .touchUpInside)
+        return btn
+    }()
+    
     lazy var scroll: UIScrollView = {
         var scroll = UIScrollView()
         scroll.backgroundColor = UIColor(r: 245, g: 245, b: 245)
@@ -150,23 +163,11 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
     
     var picker = UIPickerView()
     var pickerMinutes = UIPickerView()
-
-    override func viewWillAppear(_ animated: Bool)
-    {
-        self.navigationController?.navigationBar.barTintColor = UIColor(r: 22, g: 147, b: 162)
-    }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle
-    {
-        return .lightContent
-    }
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+
         
         view.addSubview(scroll)
         scroll.addSubview(lblTitle)
@@ -182,6 +183,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         scroll.addSubview(lblDurata)
         scroll.addSubview(txtDurata)
         scroll.addSubview(btnSend)
+        scroll.addSubview(btnUndo)
         
         picker.delegate = self
         picker.dataSource = self
@@ -304,6 +306,11 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         view.endEditing(true)
     }
     
+    @objc func handleUndo()
+    {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     let dataBase = Database.database().reference(fromURL: "https://banca-del-tempo-aa402.firebaseio.com")
     var titoloNav: String?
     @objc func handleSend()
@@ -379,7 +386,8 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
                             
                             UserDefaults.standard.set(postCreated as! Int + 1, forKey: "numeroPost")
                         }
-                         self.navigationController?.popViewController(animated: true)
+//                        self.navigationController?.popViewController(animated: true)
+                        self.dismiss(animated: true, completion: nil)
 
                     }
             })
@@ -443,12 +451,12 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
     
     func configureConstraints()
     {
-        scroll.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
+        scroll.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         scroll.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        scroll.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor).isActive = true
+        scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
-        lblTitle.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 48).isActive = true
+        lblTitle.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 96).isActive = true
         lblTitle.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 16).isActive = true
         
         txtViewTitle.topAnchor.constraint(equalTo: lblTitle.bottomAnchor, constant: 4).isActive = true
@@ -496,7 +504,11 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         btnSend.topAnchor.constraint(equalTo: txtDurata.bottomAnchor, constant: 48).isActive = true
         btnSend.centerXAnchor.constraint(equalTo: scroll.centerXAnchor).isActive = true
         btnSend.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -56).isActive = true
-        btnSend.bottomAnchor.constraint(equalTo: scroll.bottomAnchor, constant: -16).isActive = true
+        
+        btnUndo.topAnchor.constraint(equalTo: btnSend.bottomAnchor, constant: 16).isActive = true
+        btnUndo.centerXAnchor.constraint(equalTo: scroll.centerXAnchor).isActive = true
+        btnUndo.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -56).isActive = true
+        btnUndo.bottomAnchor.constraint(equalTo: scroll.bottomAnchor, constant: -16).isActive = true
         
     }
 
