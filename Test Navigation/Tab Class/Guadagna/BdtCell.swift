@@ -67,16 +67,21 @@ class BdtCell: UITableViewCell {
         lblTitolo.leftAnchor.constraint(equalTo: imageWork.rightAnchor, constant: 10).isActive = true
         lblTitolo.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8).isActive = true
         lblTitolo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+        lblTitolo.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         lblCosto.leftAnchor.constraint(equalTo: imageWork.rightAnchor, constant: 8).isActive = true
         lblCosto.topAnchor.constraint(equalTo: lblTitolo.bottomAnchor, constant: 8).isActive = true
+        lblCosto.widthAnchor.constraint(equalToConstant: 160).isActive = true
         
         lblLuogo.leftAnchor.constraint(equalTo: imageWork.rightAnchor, constant: 8).isActive = true
         lblLuogo.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8).isActive = true
         lblLuogo.topAnchor.constraint(equalTo: lblCosto.bottomAnchor, constant: 8).isActive = true
         lblLuogo.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
+        
         lblRichiedeOffre.leftAnchor.constraint(equalTo: lblCosto.rightAnchor, constant: 64).isActive = true
         lblRichiedeOffre.centerYAnchor.constraint(equalTo: lblCosto.centerYAnchor).isActive = true
+        lblRichiedeOffre.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        lblRichiedeOffre.widthAnchor.constraint(equalToConstant: 160).isActive = true
     }
 }

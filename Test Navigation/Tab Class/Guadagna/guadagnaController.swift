@@ -36,7 +36,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 
-class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
     let cellID = "cellIDBDT"
     
@@ -45,7 +45,7 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
         tbl.translatesAutoresizingMaskIntoConstraints = false
         tbl.delegate = self
         tbl.dataSource = self
-        tbl.rowHeight = 100
+        tbl.rowHeight = 120
         tbl.register(BdtCell.self, forCellReuseIdentifier: cellID)
         return tbl
     }()
@@ -59,6 +59,13 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
     
     let dataBase = Database.database().reference(fromURL: "https://banca-del-tempo-aa402.firebaseio.com")
     var jsonMyPost: [download] = []
+    var filter = [download]()
+    {
+        didSet
+        {
+            debugPrint(filter)
+        }
+    }
     var jsonOtherPost: [download] = []
     
     var myOrOther: Bool = true
@@ -79,9 +86,26 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
         searchBar.placeholder = "Cerca tra i miei annunci"
         navigationItem.titleView = searchBar
         
+        searchBar.delegate = self
         configureConstraints()
         downloadArray()
+        tastiera()
     }
+    
+    func tastiera() {
+        let keyboardToolbar = UIToolbar()
+        keyboardToolbar.sizeToFit()
+        let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissKeyboard))
+        keyboardToolbar.items = [flexBarButton, doneBarButton]
+        searchBar.inputAccessoryView = keyboardToolbar
+    }
+    
+    @objc func dismissKeyboard()
+    {
+        searchBar.endEditing(true)
+    }
+
     
     @objc func handleSwitch()
     {
@@ -104,7 +128,7 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
         let controller = FornisciRichiediController()
         controller.title = "Fornisci"
         controller.titoloNav = "fornisce"
-        self.present(controller, animated: true, completion: nil)
+        self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
     }
 
     func configureConstraints()
@@ -164,12 +188,20 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        switch self.myOrOther
+        if filter.count > 0
         {
-        case true:
-            return jsonMyPost.count
-        default:
-            return jsonOtherPost.count
+            return filter.count
+        }
+        else
+        {
+            switch self.myOrOther
+            {
+            case true:
+                return jsonMyPost.count
+            default:
+                return jsonOtherPost.count
+            }
+
         }
     }
     
@@ -218,13 +250,21 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! BdtCell
         var post: download
-        switch self.myOrOther
+        if filter.count > 0
         {
-        case true:
-            post = jsonMyPost[indexPath.row]
-        default:
-            post = jsonOtherPost[indexPath.row]
+            post = filter[indexPath.row]
         }
+        else
+        {
+            switch self.myOrOther
+            {
+            case true:
+                post = jsonMyPost[indexPath.row]
+            default:
+                post = jsonOtherPost[indexPath.row]
+            }
+        }
+        
         
         cell.imageWork.image = UIImage(named: post.idBoss!)
         cell.lblTitolo.text = post.titolo
@@ -240,10 +280,31 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
         {
              cell.lblCosto.text = "0\(ore ?? 00):\(minuti ?? 00)h"
         }
-
-        
         return cell
     }
-
+    
+    func searchBar(searchText: String)
+    {
+        debugPrint("hello")
+        filter = jsonMyPost.filter { (filter) -> Bool in
+            debugPrint(filter.titolo?.range(of: searchText, options: [ .caseInsensitive ]) != nil)
+            return filter.titolo?.range(of: searchText, options: [ .caseInsensitive ]) != nil
+            
+        }
+        
+     
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
+    {
+        
+        filter = jsonMyPost.filter { (filter) -> Bool in
+            debugPrint(filter.titolo?.range(of: searchText, options: [ .caseInsensitive ]) != nil)
+            return filter.titolo?.range(of: searchText, options: [ .caseInsensitive ]) != nil
+            
+        }
+        debugPrint(filter.count)
+        myTable.reloadData()
+    }
 
 }
