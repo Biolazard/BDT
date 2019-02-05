@@ -36,7 +36,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 
-class searchController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let cellID = "cellIDBDT"
     
@@ -50,29 +50,53 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
         return tbl
     }()
     
+    lazy var searchBar: UISearchBar = UISearchBar(frame: CGRect.zero)
+    
     override var preferredStatusBarStyle: UIStatusBarStyle
     {
         return .lightContent
     }
     
     let dataBase = Database.database().reference(fromURL: "https://banca-del-tempo-aa402.firebaseio.com")
-    var jsonDownloaded: [download] = []
+    var jsonMyPost: [download] = []
+    var jsonOtherPost: [download] = []
+    
+    var myOrOther: Bool = true
+    
     let userID = Auth.auth().currentUser!.uid
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         view.addSubview(myTable)
-
         view.showBlurLoader()
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.barTintColor = UIColor(r: 22, g: 147, b: 162)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "switch"), style: .done, target: self, action: #selector(handleSwitch))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddService))
         navigationItem.rightBarButtonItem?.tintColor = .white
-        navigationItem.title = "Cerca"
-        configureConstraints()
+        navigationItem.leftBarButtonItem?.tintColor = .white
+        searchBar.placeholder = "Cerca tra i miei annunci"
+        navigationItem.titleView = searchBar
         
+        configureConstraints()
         downloadArray()
+    }
+    
+    @objc func handleSwitch()
+    {
+        if self.myOrOther == true
+        {
+            self.myOrOther = false
+            self.searchBar.placeholder = "Cerca tra altri annunci"
+            self.myTable.reloadData()
+        }
+        else
+        {
+            self.myOrOther = true
+            self.searchBar.placeholder = "Cerca tra i miei annunci"
+            self.myTable.reloadData()
+        }
     }
     
     @objc func handleAddService()
@@ -96,27 +120,31 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
             if let dictionary = snapshot.value as? [String : Any]
             {
                 self.view.removeBluerLoader()
-                var fetchArray: [download] = []
+                var myPost: [download] = []
+                var otherPost: [download] = []
+                
                 for element in dictionary
                 {
-                    
                     let value = element.value as? [String: Any]
                     
                     let post = download(cambioOra: self.castToBool(value: value?["cambio ora"] as? String), categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciatoBoss: self.castToBool(value: value?["feedback rilasciato boss"] as? String), luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: self.castToBool(value: value?["post assegnato"] as? String), terminaDaBoss: self.castToBool(value: value?["termina da boss"] as? String), richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: self.castToBool(value: value?["termina utente help"] as? String), titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String, idPost: value?["idPost"] as? Int, proposte: value?["proposte"] as? String, feedbackRilasciatoHelper: self.castToBool(value: value?["feedback rilasciato helper"] as? String))
-                    if post.postAssegnato == false
+                    if post.idBoss == self.userID && post.richiestaofferta == "fornisce"
                     {
-                        fetchArray.append(post)
+                        myPost.append(post)
                     }
-                    
+                    else if post.idBoss != self.userID && post.richiestaofferta == "richiede"
+                    {
+                        otherPost.append(post)
+                    }
                 }
-                self.jsonDownloaded = fetchArray
+                self.jsonMyPost = myPost
+                self.jsonOtherPost = otherPost
                 self.myTable.reloadData()
                 
             }
             else
             {
                 self.view.removeBluerLoader()
-                debugPrint("errore")
             }
         }
     }
@@ -136,14 +164,18 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return jsonDownloaded.count
+        switch self.myOrOther
+        {
+        case true:
+            return jsonMyPost.count
+        default:
+            return jsonOtherPost.count
+        }
     }
-    
-    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        let post = jsonDownloaded[indexPath.row]
+        let post = jsonMyPost[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
         let detailController = detailPostSearch()
         detailController.title = "Post"
@@ -185,8 +217,15 @@ class searchController: UIViewController, UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! BdtCell
+        var post: download
+        switch self.myOrOther
+        {
+        case true:
+            post = jsonMyPost[indexPath.row]
+        default:
+            post = jsonOtherPost[indexPath.row]
+        }
         
-        let post = jsonDownloaded[indexPath.row]
         cell.imageWork.image = UIImage(named: post.idBoss!)
         cell.lblTitolo.text = post.titolo
         cell.lblLuogo.text = post.luogo

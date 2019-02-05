@@ -140,19 +140,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         btn.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
         return btn
     }()
-    
-    lazy var btnUndo: UIButton = {
-        var btn = UIButton(type: .system)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitle("Annulla", for: .normal)
-        btn.backgroundColor = .red
-        btn.setTitleColor(.white, for: .normal)
-        btn.layer.cornerRadius = 8
-        btn.titleLabel?.font = .boldSystemFont(ofSize: 28)
-        btn.contentHorizontalAlignment = .center
-        btn.addTarget(self, action: #selector(handleUndo), for: .touchUpInside)
-        return btn
-    }()
+
     
     lazy var scroll: UIScrollView = {
         var scroll = UIScrollView()
@@ -164,11 +152,18 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
     var picker = UIPickerView()
     var pickerMinutes = UIPickerView()
     
+    override var preferredStatusBarStyle: UIStatusBarStyle
+    {
+        return .lightContent
+    }
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
-
-        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Chiudi", style: .done, target: self, action: #selector(handleUndo))
+        navigationItem.rightBarButtonItem?.tintColor = .white
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.barTintColor = UIColor(r: 22, g: 147, b: 162)
         view.addSubview(scroll)
         scroll.addSubview(lblTitle)
         scroll.addSubview(txtViewTitle)
@@ -183,7 +178,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         scroll.addSubview(lblDurata)
         scroll.addSubview(txtDurata)
         scroll.addSubview(btnSend)
-        scroll.addSubview(btnUndo)
+//        scroll.addSubview(btnUndo)
         
         picker.delegate = self
         picker.dataSource = self
@@ -203,7 +198,27 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleDismssKeyboard))
         view.addGestureRecognizer(tap)
+        tastiera()
         
+    }
+    
+    func tastiera() {
+        let keyboardToolbar = UIToolbar()
+        keyboardToolbar.sizeToFit()
+        let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissKeyboard))
+        keyboardToolbar.items = [flexBarButton, doneBarButton]
+        txtViewTitle.inputAccessoryView = keyboardToolbar
+        txtLuogo.inputAccessoryView = keyboardToolbar
+        txtDurata.inputAccessoryView = keyboardToolbar
+        txtViewDescription.inputAccessoryView = keyboardToolbar
+        txtCategoriaScelta.inputAccessoryView = keyboardToolbar
+        
+    }
+    
+    @objc func dismissKeyboard()
+    {
+        view.endEditing(true)
     }
     
     let categorie = ["Lezioni di vario genere", "Consulenza professionale", "Tecnologia e servizi digitali", "Commissioni", "Lavori domestci", "Sport, salute e benessere", "Organizzazione eventi", "Lavori manuali", "Altro"]
@@ -456,7 +471,7 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         scroll.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
-        lblTitle.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 96).isActive = true
+        lblTitle.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 24).isActive = true
         lblTitle.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 16).isActive = true
         
         txtViewTitle.topAnchor.constraint(equalTo: lblTitle.bottomAnchor, constant: 4).isActive = true
@@ -504,11 +519,8 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         btnSend.topAnchor.constraint(equalTo: txtDurata.bottomAnchor, constant: 48).isActive = true
         btnSend.centerXAnchor.constraint(equalTo: scroll.centerXAnchor).isActive = true
         btnSend.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -56).isActive = true
-        
-        btnUndo.topAnchor.constraint(equalTo: btnSend.bottomAnchor, constant: 16).isActive = true
-        btnUndo.centerXAnchor.constraint(equalTo: scroll.centerXAnchor).isActive = true
-        btnUndo.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -56).isActive = true
-        btnUndo.bottomAnchor.constraint(equalTo: scroll.bottomAnchor, constant: -16).isActive = true
+        btnSend.bottomAnchor.constraint(equalTo: scroll.bottomAnchor, constant: -16).isActive = true
+
         
     }
 
