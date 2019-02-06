@@ -84,6 +84,8 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
     
     @objc func handleSwitch()
     {
+        filter = []
+        self.searchBar.text = ""
         if self.myOrOther == true
         {
             self.myOrOther = false
@@ -127,11 +129,11 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
                     let value = element.value as? [String: Any]
                     
                     let post = download(cambioOra: self.castToBool(value: value?["cambio ora"] as? String), categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciatoBoss: self.castToBool(value: value?["feedback rilasciato boss"] as? String), luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: self.castToBool(value: value?["post assegnato"] as? String), terminaDaBoss: self.castToBool(value: value?["termina da boss"] as? String), richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: self.castToBool(value: value?["termina utente help"] as? String), titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String, idPost: value?["idPost"] as? Int, proposte: value?["proposte"] as? String, feedbackRilasciatoHelper: self.castToBool(value: value?["feedback rilasciato helper"] as? String))
-                    if post.idBoss == self.userID && post.richiestaofferta == "richiede"
+                    if post.idBoss == self.userID && post.richiestaofferta == "richiede" && post.feedbackRilasciatoBoss == false
                     {
                         myPost.append(post)
                     }
-                    else if post.idBoss != self.userID && post.richiestaofferta == "fornisce"
+                    else if post.idBoss != self.userID && post.richiestaofferta == "fornisce" && post.feedbackRilasciatoHelper == false
                     {
                         otherPost.append(post)
                     }
@@ -182,14 +184,50 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        let post = jsonMyPost[indexPath.row]
+        var post: download
+        
+        if filter.count > 0
+        {
+            post = filter[indexPath.row]
+        }
+        else
+        {
+            switch self.myOrOther
+            {
+            case true:
+                post = jsonMyPost[indexPath.row]
+            default:
+                post = jsonOtherPost[indexPath.row]
+            }
+        }
+        
         tableView.deselectRow(at: indexPath, animated: true)
         let detailController = detailPostSearch()
         detailController.title = "Post"
+        //        if post.postAssegnato == true
+        //        {
+        //            detailController.lblProposte.text = "Assegnato a"
+        //            detailController.btnterminaServizio.alpha = 1
+        //        }
+        //        if post.proposte != ""
+        //        {
+        //            detailController.btnInviaRichiesta.setTitle("Richiesta inviata", for: .normal)
+        //            detailController.btnInviaRichiesta.isEnabled = false
+        //        }
+        //        if post.postAssegnato == true
+        //        {
+        //            detailController.btnInviaRichiesta.setTitle("Termina servizio", for: .normal)
+        //            detailController.btnInviaRichiesta.isEnabled = true
+        //        }
+        
         if post.postAssegnato == true
         {
             detailController.lblProposte.text = "Assegnato a"
-            detailController.btnterminaServizio.alpha = 1
+            if post.idBoss == self.userID
+            {
+                detailController.btnterminaServizio.alpha = 1
+            }
+            
         }
         if post.proposte != ""
         {
@@ -199,8 +237,23 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
         if post.postAssegnato == true
         {
             detailController.btnInviaRichiesta.setTitle("Termina servizio", for: .normal)
+            detailController.btnInviaRichiesta.backgroundColor = .red
             detailController.btnInviaRichiesta.isEnabled = true
         }
+        
+        if self.userID == post.idBoss && post.terminaDaBoss == true
+        {
+            detailController.btnterminaServizio.setTitle("Lascia feedback", for: .normal)
+            detailController.btnterminaServizio.backgroundColor = .green
+            detailController.btnterminaServizio.isEnabled = true
+        }
+        else if self.userID != post.idBoss && post.terminaDaUtente == true
+        {
+            detailController.btnInviaRichiesta.setTitle("Lascia feedback", for: .normal)
+            detailController.btnInviaRichiesta.backgroundColor = .green
+            detailController.btnInviaRichiesta.isEnabled = true
+        }
+        
         detailController.lblDescrizione.text = post.descrizione
         let ore = post.ore
         let minuti = post.minuti
@@ -240,6 +293,38 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
             }
         }
         
+        if post.idBoss == self.userID && post.proposte == ""
+        {
+            cell.lblAction.text = "Non ci sono proposte"
+        }
+        else if post.idBoss == self.userID && post.proposte != ""
+        {
+            cell.lblAction.text = "Ci sono proposte"
+        }
+        
+        if post.postAssegnato == true
+        {
+            cell.lblAction.text = "In corso..."
+        }
+        
+        if post.idBoss != self.userID && post.proposte != "" && post.terminaDaUtente == false && post.postAssegnato == false
+        {
+            cell.lblAction.text = "Richiesta inviata"
+        }
+        
+        if post.idBoss == self.userID && post.terminaDaBoss == true
+        {
+            cell.lblAction.text = "Lascia Feedback"
+        }
+        else if post.idBoss != self.userID && post.terminaDaUtente == true
+        {
+            cell.lblAction.text = "Lascia Feedback"
+        }
+        
+        if post.idBoss != self.userID && post.proposte == ""
+        {
+            cell.lblAction.text = ""
+        }
         
         cell.imageWork.image = UIImage(named: post.idBoss!)
         cell.lblTitolo.text = post.titolo
@@ -258,27 +343,24 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
         return cell
     }
     
-    func searchBar(searchText: String)
-    {
-        debugPrint("hello")
-        filter = jsonMyPost.filter { (filter) -> Bool in
-            debugPrint(filter.titolo?.range(of: searchText, options: [ .caseInsensitive ]) != nil)
-            return filter.titolo?.range(of: searchText, options: [ .caseInsensitive ]) != nil
-            
-        }
-        
-        
-    }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
     {
-        
-        filter = jsonMyPost.filter { (filter) -> Bool in
-            debugPrint(filter.titolo?.range(of: searchText, options: [ .caseInsensitive ]) != nil)
-            return filter.titolo?.range(of: searchText, options: [ .caseInsensitive ]) != nil
-            
+        filter = []
+        if self.myOrOther == true
+        {
+            filter = jsonMyPost.filter { (filter) -> Bool in
+                return filter.titolo?.range(of: searchText, options: [ .caseInsensitive ]) != nil
+                
+            }
         }
-        debugPrint(filter.count)
+        else
+        {
+            filter = jsonOtherPost.filter { (filter) -> Bool in
+                return filter.titolo?.range(of: searchText, options: [ .caseInsensitive ]) != nil
+                
+            }
+        }
         myTable.reloadData()
     }
     

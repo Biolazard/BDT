@@ -15,6 +15,7 @@ class BdtCell: UITableViewCell {
     let lblCosto = UILabel()
     let lblLuogo = UILabel()
     let lblRichiedeOffre = UILabel()
+    let lblAction = UILabel()
     var valoreUUID: String?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?)
@@ -43,12 +44,17 @@ class BdtCell: UITableViewCell {
         lblRichiedeOffre.textColor = UIColor(r: 22, g: 147, b: 162)
         lblRichiedeOffre.adjustsFontSizeToFitWidth = true
         
+        lblAction.translatesAutoresizingMaskIntoConstraints = false
+        lblAction.numberOfLines = 1
+        lblAction.adjustsFontSizeToFitWidth = true
+        
         
         contentView.addSubview(imageWork)
         contentView.addSubview(lblTitolo)
         contentView.addSubview(lblCosto)
         contentView.addSubview(lblLuogo)
         contentView.addSubview(lblRichiedeOffre)
+        contentView.addSubview(lblAction)
         configureConstraints()
     }
     
@@ -78,10 +84,16 @@ class BdtCell: UITableViewCell {
         lblLuogo.topAnchor.constraint(equalTo: lblCosto.bottomAnchor, constant: 8).isActive = true
         lblLuogo.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        
         lblRichiedeOffre.leftAnchor.constraint(equalTo: lblCosto.rightAnchor, constant: 64).isActive = true
-        lblRichiedeOffre.centerYAnchor.constraint(equalTo: lblCosto.centerYAnchor).isActive = true
+        lblRichiedeOffre.centerYAnchor.constraint(equalTo: lblCosto.centerYAnchor, constant: -24).isActive = true
         lblRichiedeOffre.heightAnchor.constraint(equalToConstant: 40).isActive = true
         lblRichiedeOffre.widthAnchor.constraint(equalToConstant: 160).isActive = true
+        
+        lblAction.centerYAnchor.constraint(equalTo: lblCosto.centerYAnchor, constant: 24).isActive = true
+        lblAction.leftAnchor.constraint(equalTo: lblCosto.rightAnchor, constant: -8).isActive = true
+        lblAction.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        lblAction.widthAnchor.constraint(equalToConstant: 160).isActive = true
+        
+        
     }
 }

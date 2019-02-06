@@ -194,6 +194,7 @@ class serviceController: UIViewController, UITableViewDelegate, UITableViewDataS
             detailController.btnInviaRichiesta.backgroundColor = .red
             detailController.btnInviaRichiesta.isEnabled = true
         }
+        
         detailController.lblDescrizione.text = post.descrizione
         let ore = post.ore
         let minuti = post.minuti
