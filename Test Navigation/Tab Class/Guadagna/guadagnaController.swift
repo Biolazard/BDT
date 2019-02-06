@@ -50,6 +50,18 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
         return tbl
     }()
     
+    lazy var btnAccetta: UIButton = {
+        var btn = UIButton(type: .system)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setTitle("Mostra altri servizi", for: .normal)
+        btn.backgroundColor = UIColor(r: 22, g: 147, b: 162)
+        btn.setTitleColor(.white, for: .normal)
+        btn.titleLabel?.font = .boldSystemFont(ofSize: 20)
+        btn.contentHorizontalAlignment = .center
+        btn.addTarget(self, action: #selector(handleSwitch), for: .touchUpInside)
+        return btn
+    }()
+    
     lazy var searchBar: UISearchBar = UISearchBar(frame: CGRect.zero)
     
     override var preferredStatusBarStyle: UIStatusBarStyle
@@ -76,16 +88,15 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
     {
         super.viewDidLoad()
         view.addSubview(myTable)
+        view.addSubview(btnAccetta)
         view.showBlurLoader()
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.barTintColor = UIColor(r: 22, g: 147, b: 162)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "switch"), style: .done, target: self, action: #selector(handleSwitch))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddService))
         navigationItem.rightBarButtonItem?.tintColor = .white
         navigationItem.leftBarButtonItem?.tintColor = .white
         searchBar.placeholder = "Cerca tra i miei annunci"
         navigationItem.titleView = searchBar
-        
         searchBar.delegate = self
         configureConstraints()
         downloadArray()
@@ -115,11 +126,13 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
         {
             self.myOrOther = false
             self.searchBar.placeholder = "Cerca tra altri annunci"
+            btnAccetta.setTitle("Mostra i miei servizi", for: .normal)
             self.myTable.reloadData()
         }
         else
         {
             self.myOrOther = true
+            btnAccetta.setTitle("Mostra altri servizi", for: .normal)
             self.searchBar.placeholder = "Cerca tra i miei annunci"
             self.myTable.reloadData()
         }
@@ -137,7 +150,10 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
     {
         myTable.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
         myTable.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        myTable.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor).isActive = true
+        
+        btnAccetta.topAnchor.constraint(equalTo: myTable.bottomAnchor).isActive = true
+        btnAccetta.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        btnAccetta.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor).isActive = true
     }
     
     func downloadArray()
