@@ -16,6 +16,7 @@ class BdtCell: UITableViewCell {
     let lblLuogo = UILabel()
     let lblRichiedeOffre = UILabel()
     let lblAction = UILabel()
+    
     var valoreUUID: String?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?)
@@ -43,12 +44,12 @@ class BdtCell: UITableViewCell {
         lblRichiedeOffre.font = .boldSystemFont(ofSize: 16)
         lblRichiedeOffre.textColor = UIColor(r: 22, g: 147, b: 162)
         lblRichiedeOffre.adjustsFontSizeToFitWidth = true
+        lblRichiedeOffre.alpha = 0
         
         lblAction.translatesAutoresizingMaskIntoConstraints = false
         lblAction.numberOfLines = 1
         lblAction.adjustsFontSizeToFitWidth = true
-        
-        
+
         contentView.addSubview(imageWork)
         contentView.addSubview(lblTitolo)
         contentView.addSubview(lblCosto)
@@ -76,7 +77,7 @@ class BdtCell: UITableViewCell {
         lblTitolo.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         lblCosto.leftAnchor.constraint(equalTo: imageWork.rightAnchor, constant: 8).isActive = true
-        lblCosto.topAnchor.constraint(equalTo: lblTitolo.bottomAnchor, constant: 8).isActive = true
+        lblCosto.topAnchor.constraint(equalTo: lblTitolo.bottomAnchor, constant: 2).isActive = true
         lblCosto.widthAnchor.constraint(equalToConstant: 160).isActive = true
         
         lblLuogo.leftAnchor.constraint(equalTo: imageWork.rightAnchor, constant: 8).isActive = true
@@ -89,8 +90,8 @@ class BdtCell: UITableViewCell {
         lblRichiedeOffre.heightAnchor.constraint(equalToConstant: 40).isActive = true
         lblRichiedeOffre.widthAnchor.constraint(equalToConstant: 160).isActive = true
         
-        lblAction.centerYAnchor.constraint(equalTo: lblCosto.centerYAnchor, constant: 24).isActive = true
-        lblAction.leftAnchor.constraint(equalTo: lblCosto.rightAnchor, constant: -8).isActive = true
+        lblAction.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
+        lblAction.leftAnchor.constraint(equalTo: lblCosto.rightAnchor, constant: -40).isActive = true
         lblAction.heightAnchor.constraint(equalToConstant: 40).isActive = true
         lblAction.widthAnchor.constraint(equalToConstant: 160).isActive = true
         

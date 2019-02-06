@@ -95,7 +95,7 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddService))
         navigationItem.rightBarButtonItem?.tintColor = .white
         navigationItem.leftBarButtonItem?.tintColor = .white
-        searchBar.placeholder = "Cerca tra i miei annunci"
+        searchBar.placeholder = "Cerca tra i miei servizi"
         navigationItem.titleView = searchBar
         searchBar.delegate = self
         configureConstraints()
@@ -125,7 +125,7 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
         if self.myOrOther == true
         {
             self.myOrOther = false
-            self.searchBar.placeholder = "Cerca tra altri annunci"
+            self.searchBar.placeholder = "Cerca tra altri servizi"
             btnAccetta.setTitle("Mostra i miei servizi", for: .normal)
             self.myTable.reloadData()
         }
@@ -133,7 +133,7 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
         {
             self.myOrOther = true
             btnAccetta.setTitle("Mostra altri servizi", for: .normal)
-            self.searchBar.placeholder = "Cerca tra i miei annunci"
+            self.searchBar.placeholder = "Cerca tra i miei servizi"
             self.myTable.reloadData()
         }
     }
@@ -171,7 +171,7 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     let post = download(cambioOra: self.castToBool(value: value?["cambio ora"] as? String), categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciatoBoss: self.castToBool(value: value?["feedback rilasciato boss"] as? String), luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: self.castToBool(value: value?["post assegnato"] as? String), terminaDaBoss: self.castToBool(value: value?["termina da boss"] as? String), richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: self.castToBool(value: value?["termina utente help"] as? String), titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String, idPost: value?["idPost"] as? Int, proposte: value?["proposte"] as? String, feedbackRilasciatoHelper: self.castToBool(value: value?["feedback rilasciato helper"] as? String))
                     
-                    if post.idBoss == self.userID && post.richiestaofferta == "fornisce" && post.feedbackRilasciatoBoss == false
+                    if post.idBoss == self.userID && post.richiestaofferta == "fornisce" && post.feedbackRilasciatoBoss == false || self.userID == post.proposte && post.richiestaofferta == "richiede"
                     {
                         myPost.append(post)
                     }
@@ -304,6 +304,7 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! BdtCell
+        cell.accessoryType = .disclosureIndicator
         var post: download
         if filter.count > 0
         {
