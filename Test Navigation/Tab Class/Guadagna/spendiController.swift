@@ -146,7 +146,8 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
                     let value = element.value as? [String: Any]
                     
                     let post = download(cambioOra: self.castToBool(value: value?["cambio ora"] as? String), categoria: value!["categoria"] as? String, descrizione: value?["descrizione"] as? String, feedbackRilasciatoBoss: self.castToBool(value: value?["feedback rilasciato boss"] as? String), luogo: value?["luogo"] as? String, minuti: value?["minuti"] as? Int, ore: value?["ore"] as? Int, postAssegnato: self.castToBool(value: value?["post assegnato"] as? String), terminaDaBoss: self.castToBool(value: value?["termina da boss"] as? String), richiestaofferta: value?["richiestaofferta"] as? String, terminaDaUtente: self.castToBool(value: value?["termina utente help"] as? String), titolo: value?["titolo"] as? String, idBoss: value?["utente boss"] as? String, idPost: value?["idPost"] as? Int, proposte: value?["proposte"] as? String, feedbackRilasciatoHelper: self.castToBool(value: value?["feedback rilasciato helper"] as? String))
-                    if post.idBoss == self.userID && post.richiestaofferta == "richiede" && post.feedbackRilasciatoBoss == false || self.userID == post.proposte && post.richiestaofferta == "fornisce"
+                    
+                    if post.idBoss == self.userID && post.richiestaofferta == "richiede" && post.feedbackRilasciatoBoss == false || self.userID == post.proposte && post.richiestaofferta == "fornisce" && post.feedbackRilasciatoHelper == false
                     {
                         myPost.append(post)
                     }
