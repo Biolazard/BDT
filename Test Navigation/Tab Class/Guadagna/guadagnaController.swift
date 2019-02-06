@@ -53,7 +53,7 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
     lazy var btnAccetta: UIButton = {
         var btn = UIButton(type: .system)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitle("Mostra altri servizi", for: .normal)
+        btn.setTitle("Mostra i miei servizi", for: .normal)
         btn.backgroundColor = UIColor(r: 22, g: 147, b: 162)
         btn.setTitleColor(.white, for: .normal)
         btn.titleLabel?.font = .boldSystemFont(ofSize: 20)
@@ -80,7 +80,7 @@ class guadagnaController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     var jsonOtherPost: [download] = []
     
-    var myOrOther: Bool = true
+    var myOrOther: Bool = false
     
     let userID = Auth.auth().currentUser!.uid
     
