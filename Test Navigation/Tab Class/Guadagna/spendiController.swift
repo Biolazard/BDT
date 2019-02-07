@@ -71,6 +71,7 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
         navigationItem.rightBarButtonItem?.tintColor = .white
         navigationItem.leftBarButtonItem?.tintColor = .white
         searchBar.placeholder = "Cosa stai cercando?"
+        searchBar.tintColor = .gray
         navigationItem.titleView = searchBar
         
         searchBar.delegate = self
