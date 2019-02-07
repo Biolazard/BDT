@@ -33,6 +33,7 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
         btn.setTitleColor(.white, for: .normal)
         btn.titleLabel?.font = .boldSystemFont(ofSize: 20)
         btn.contentHorizontalAlignment = .center
+        btn.alpha = 0
         btn.addTarget(self, action: #selector(handleSwitch), for: .touchUpInside)
         return btn
     }()
@@ -55,7 +56,7 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
     }
     var jsonOtherPost: [download] = []
     
-    var myOrOther: Bool = false
+    var myOrOther: Bool = true
     
     let userID = Auth.auth().currentUser!.uid
     
@@ -63,14 +64,13 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
     {
         super.viewDidLoad()
         view.addSubview(myTable)
-        view.addSubview(btnAccetta)
         view.showBlurLoader()
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.barTintColor = UIColor(r: 22, g: 147, b: 162)
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddService))
         navigationItem.rightBarButtonItem?.tintColor = .white
         navigationItem.leftBarButtonItem?.tintColor = .white
-        searchBar.placeholder = "Cerca tra i miei servizi"
+        searchBar.placeholder = "Cosa stai cercando?"
         navigationItem.titleView = searchBar
         
         searchBar.delegate = self
@@ -126,10 +126,7 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
     {
         myTable.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
         myTable.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        
-        btnAccetta.topAnchor.constraint(equalTo: myTable.bottomAnchor).isActive = true
-        btnAccetta.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        btnAccetta.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor).isActive = true
+        myTable.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor).isActive = true
     }
     
     func downloadArray()
@@ -353,7 +350,7 @@ class spendiController: UIViewController, UITableViewDataSource, UITableViewDele
         filter = []
         if self.myOrOther == true
         {
-            filter = jsonMyPost.filter { (filter) -> Bool in
+            filter = jsonOtherPost.filter { (filter) -> Bool in
                 return filter.titolo?.range(of: searchText, options: [ .caseInsensitive ]) != nil
                 
             }
