@@ -178,7 +178,6 @@ class FornisciRichiediController: UIViewController, UINavigationControllerDelega
         scroll.addSubview(lblDurata)
         scroll.addSubview(txtDurata)
         scroll.addSubview(btnSend)
-//        scroll.addSubview(btnUndo)
         
         picker.delegate = self
         picker.dataSource = self

@@ -34,7 +34,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         cosmos.settings.updateOnTouch = false
         cosmos.settings.textColor = .white
         cosmos.settings.totalStars = 5
-        cosmos.rating = 0
+        cosmos.rating = 3.8
         cosmos.settings.fillMode = .precise
         cosmos.settings.filledColor = .white
         cosmos.settings.filledBorderColor = .white
@@ -44,7 +44,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     let segmentControl: UISegmentedControl = {
         var sc = UISegmentedControl()
-        let item = ["CRONOLOGIA", "FEEDBACK"]
+        let item = ["CRONOLOGIA"]
         sc = UISegmentedControl(items: item)
         sc.tintColor = UIColor.white
         sc.selectedSegmentIndex = 1
@@ -160,7 +160,7 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         view.addSubview(lblColor)
         
         lblColor.addSubview(imgProfile)
-        lblColor.addSubview(cosmosView)
+        view.addSubview(cosmosView)
         lblColor.addSubview(nameProfile)
         
         view.addSubview(tempoDisponbile)
@@ -184,8 +184,20 @@ class profileController: UIViewController, UITableViewDelegate, UITableViewDataS
         let tempoCongelatoo: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleCongelato))
         tempoCongelato.addGestureRecognizer(tempoCongelatoo)
         
+        let showFeed: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleFeedback))
+        cosmosView.addGestureRecognizer(showFeed)
+        
+        downloadFeedback()
     }
-            
+    
+    @objc func handleFeedback()
+    {
+        debugPrint("hello")
+        let feed = myFeedback()
+        feed.jsonFeedback = self.jsonFeedback
+        self.navigationController?.pushViewController(feed, animated: true)
+    }
+    
     @objc func handleTempo()
     {
         debugPrint("hello")
